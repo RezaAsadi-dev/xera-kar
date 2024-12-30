@@ -1,0 +1,63 @@
+.addContainer {
+  width: 100%;
+}
+.contantAddForm {
+  width: 100%;
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0;
+}
+.fileUploaderContainer {
+  margin: auto;
+}
+.logoContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: -50px;
+  margin-bottom: 15px;
+}
+.contantAddForm .formItem {
+  min-width: 300px;
+  margin: 10px 8px;
+}
+.contantAddForm .webSiteForm {
+  width: 38%;
+  min-width: 460px;
+  margin: 5px 4px;
+}
+
+.formItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: center; /* Centers the content horizontally */
+  width: 38%; /* Ensures the form items take full width */
+}
+
+@media screen and (max-width: 850px) {
+  .contantAddForm .formItem {
+    width: 100%;
+    margin: auto;
+  }
+
+  .contantAddForm .formItem input {
+    width: 90%;
+  }
+}
+@media screen and (max-width: 450px) {
+  .contantAddForm .formItem {
+    width: 90%;
+    margin: auto;
+  }
+
+  .contantAddForm .formItem input {
+    width: 90%;
+  }
+}
+.formItemSelect {
+  width: 30%;
+}

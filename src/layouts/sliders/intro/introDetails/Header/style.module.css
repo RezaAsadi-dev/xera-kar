@@ -1,0 +1,24 @@
+.editBtn {
+    width: fit-content;
+    background-color: #948ff0a3;
+    color: #261f9a;
+    border: none;
+    border-radius: 25px;
+    padding: 7px 23px;
+    display: flex;
+    justify-content: space-evenly;
+    font-weight: 500 !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 13px;
+    align-items: center;
+}
+
+.editBtn:hover {
+    background-color: #5a55c295;
+}
+
+.editBtn svg {
+    color: #261f9a;
+    margin-right: 10px;
+}

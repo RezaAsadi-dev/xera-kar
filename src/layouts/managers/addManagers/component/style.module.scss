@@ -1,0 +1,377 @@
+.addContainer {
+  width: 100% !important;
+  // padding: 0 10px;
+  border-radius: 50px !important;
+}
+.contantAddForm {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  // justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+  border-radius: 50px !important;
+}
+
+// .contantAddForm .formItem {
+//   width: 20%;
+//   max-width: 250px ;
+// }
+
+// .contantAddForm .formItem input {
+//   width: 100%;
+//   border: 1px solid #f9f9f9;
+//   background: #f9f9f9;
+//   border-radius: 20px;
+//   padding: 9px 12px;
+//   margin: 10px;
+//   transition: all 0.2s ease;
+// }
+
+// .contantAddForm .formItem input:focus {
+//   outline: none;
+//   background: #e6e6e6;
+// }
+
+// .contantAddForm .formItem input::placeholder {
+//   color: #7d7d7d;
+//   font-size: 15px;
+// }
+.tableContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 40px 0;
+  position: relative;
+
+  .table {
+    width: 100%;
+    background-color: #f7f7f7;
+    border-collapse: collapse;
+    border-spacing: 0;
+    text-align: center;
+    vertical-align: middle;
+
+    th,
+    td {
+      border-collapse: collapse;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    thead {
+      background-color: #4c57a5;
+      cursor: default;
+      tr {
+        color: #fff;
+        border: none;
+        th {
+          font-weight: 500;
+          vertical-align: middle;
+          font-size: 18px;
+        }
+      }
+    }
+
+    tbody {
+      width: 100%;
+      tr {
+        height: 100px;
+        border: 1px rgb(255, 255, 255) solid;
+        td {
+          padding: 8px 0;
+          width: 150px;
+          text-align: center;
+          font-size: 17px;
+          color: #fff;
+          &:nth-child(1) {
+            background-color: #4c57a5;
+          }
+          .optionCheckBox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .inner {
+              width: 30px;
+              height: 30px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              vertical-align: middle;
+              background-color: #efefef;
+              cursor: pointer;
+              color: #efefef;
+              border: 1px solid rgba(123, 123, 123, 0.401);
+
+              &.active {
+                color: #fff;
+                border: 1px solid rgba(123, 123, 123, 0);
+                background-color: #97df6b;
+              }
+            }
+
+            svg {
+              font-size: 14px;
+              &.disableIcon {
+                color: #ff5858;
+                font-size: 32px;
+                transform: rotate(-45deg);
+                cursor: not-allowed;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    thead tr {
+      width: 100%;
+      vertical-align: middle;
+      height: 82px;
+    }
+
+    tbody tr {
+      width: 100%;
+      vertical-align: middle;
+      height: 60px;
+    }
+  }
+}
+.uncompleted {
+  border: 1px solid red !important;
+  &::placeholder {
+    color: red !important;
+  }
+}
+.errorText {
+  font-size: 10px;
+  width: 100%;
+  margin: 0;
+}
+
+@media screen and (max-width: 850px) {
+  .contantAddForm .formItem {
+    width: 90%;
+    margin: auto;
+  }
+
+  .contantAddForm .formItem input {
+    width: 90% !important;
+  }
+
+  .tableContainer {
+    width: 98%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 40px 0;
+    position: relative;
+
+    .table {
+      width: 98%;
+      background-color: #f7f7f7;
+      border-collapse: collapse;
+      border-spacing: 0;
+      text-align: center;
+      vertical-align: middle;
+
+      th,
+      td {
+        border-collapse: collapse;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      thead {
+        background-color: #4c57a5;
+        cursor: default;
+        tr {
+          color: #fff;
+          border: none;
+          th {
+            font-weight: 500;
+            vertical-align: middle;
+            font-size: 15px;
+          }
+        }
+      }
+
+      tbody {
+        width: 100%;
+        tr {
+          border: 1px rgb(255, 255, 255) solid;
+          td {
+            padding: 8px 0;
+            width: 150px;
+            text-align: center;
+            font-size: 14px;
+            color: #fff;
+            &:nth-child(1) {
+              background-color: #4c57a5;
+            }
+            .optionCheckBox {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              .inner {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                vertical-align: middle;
+                background-color: #efefef;
+                border: 1px solid rgba(123, 123, 123, 0.401);
+                cursor: pointer;
+                color: #efefef;
+
+                &.active {
+                  color: #fff;
+                  border: 1px solid rgba(123, 123, 123, 0);
+                  background-color: #97df6b;
+                }
+              }
+
+              svg {
+                font-size: 14px;
+                &.disableIcon {
+                  color: #ff5858;
+                  font-size: 25px;
+                  transform: rotate(-45deg);
+                  cursor: not-allowed;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      thead tr {
+        width: 100%;
+        vertical-align: middle;
+        height: 60px;
+      }
+
+      tbody tr {
+        width: 100%;
+        vertical-align: middle;
+        height: 60px;
+      }
+    }
+  }
+}
+@media screen and (max-width: 450px) {
+  .contantAddForm .formItem {
+    width: 90%;
+    margin: auto;
+  }
+
+  .contantAddForm .formItem input {
+    width: 90%;
+  }
+
+  .tableContainer {
+    width: 98%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 40px 0;
+    position: relative;
+
+    .table {
+      width: 98%;
+      background-color: #f7f7f7;
+      border-collapse: collapse;
+      border-spacing: 0;
+      text-align: center;
+      vertical-align: middle;
+
+      th,
+      td {
+        border-collapse: collapse;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      thead {
+        background-color: #4c57a5;
+        cursor: default;
+        tr {
+          color: #fff;
+          border: none;
+          th {
+            font-weight: 500;
+            vertical-align: middle;
+            font-size: 14px;
+          }
+        }
+      }
+
+      tbody {
+        width: 100%;
+        tr {
+          border: 1px rgb(255, 255, 255) solid;
+          td {
+            padding: 8px 0;
+            width: 150px;
+            text-align: center;
+            font-size: 12px;
+            color: #fff;
+            &:nth-child(1) {
+              background-color: #4c57a5;
+            }
+            .optionCheckBox {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              .inner {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                vertical-align: middle;
+                background-color: #efefef;
+                border: 1px solid rgba(123, 123, 123, 0.401);
+                cursor: pointer;
+                color: #efefef;
+
+                &.active {
+                  color: #fff;
+                  border: 1px solid rgba(123, 123, 123, 0);
+                  background-color: #97df6b;
+                }
+              }
+
+              svg {
+                font-size: 14px;
+                &.disableIcon {
+                  color: #ff5858;
+                  font-size: 25px;
+                  transform: rotate(-45deg);
+                  cursor: not-allowed;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      thead tr {
+        width: 100%;
+        vertical-align: middle;
+        height: 60px;
+      }
+
+      tbody tr {
+        width: 100%;
+        vertical-align: middle;
+        height: 60px;
+      }
+    }
+  }
+}

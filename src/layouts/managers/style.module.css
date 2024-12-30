@@ -1,0 +1,68 @@
+.ManagersTable {
+    width: 100%;
+    overflow-x: auto; 
+    text-align: center;
+}
+
+.ManagersTable tr th,
+.ManagersTable tr td {
+    padding: 12px 24px 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border-bottom: 0.0625rem solid rgb(233, 236, 239);
+    opacity: 0.7;
+    background: transparent;
+    color: rgb(131, 146, 171);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Remove bottom border for the last row */
+.ManagersTable tr:last-child td {
+    border-bottom: none;
+}
+
+/* Hover effect */
+.ManagersTable tr:hover td {
+    background-color: rgba(66, 73, 85, 0.1); /* Add a light background color on hover */
+    color: rgb(66, 73, 85);
+    transition: all 0.3s ease;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .ManagersTable tr th, .ManagersTable tr td {
+        padding: 8px 12px; 
+        font-size: 0.8rem; 
+    }
+}
+
+@media (max-width: 480px) {
+    .ManagersTable {
+        overflow-x: scroll; 
+        font-size: 0.7rem; 
+    }
+
+    .ManagersTable tr th, .ManagersTable tr td {
+        padding: 6px 10px; 
+        font-size: 0.7rem;
+    }
+}
+
+.ManagersSelect {
+    width: fit-content;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid rgb(131, 146, 171);
+}
+
+.ManagersSelect:focus {
+    outline: none;
+}
+
+/* Responsive select styles */
+@media (max-width: 768px) {
+    .ManagersSelect {
+        width: 100%; 
+    }
+}

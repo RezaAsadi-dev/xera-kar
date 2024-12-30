@@ -1,0 +1,16 @@
+.lottieContainer {
+    display: flex;
+    align-items: center; /* Centers the items vertically */
+    justify-content: center; /* Centers the items horizontally */
+    gap: 20px; /* Space between the Lottie animation and the text */
+  }
+  
+  .noDataText {
+    font-size: 24px;
+    color: #bd1818 !important; /* Adjust as needed */
+    margin-bottom: 0; /* Remove default margin */
+    padding: 0;
+    font-weight: bold;
+
+  }
+  

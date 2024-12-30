@@ -1,0 +1,41 @@
+.editData {
+    width: 100%;
+    border: 1px solid #f9f9f9;
+    background: #f9f9f9;
+    border-radius: 5px;
+    padding: 3px 12px;
+    transition: all 0.2s ease;
+}
+
+.editData:focus {
+    outline: none;
+    background: #e6e6e6;
+}
+
+.editData::placeholder {
+    color: #7d7d7d;
+    font-size: 15px;
+}
+
+.btnEdit {
+    display: flex;
+    width: 35%;
+    justify-content: space-between;
+}
+
+.accessContainer {
+    border-radius: 1rem;
+    overflow: auto;
+}
+
+.titleContainer {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.titleContainer svg {
+    margin-left: 10px;
+    
+}

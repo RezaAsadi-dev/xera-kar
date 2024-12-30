@@ -1,0 +1,9 @@
+.selectedItem div{
+background-color: rgb(227, 235, 255) !important;
+ 
+}
+
+* {
+    transition: none !important;
+  }
+  

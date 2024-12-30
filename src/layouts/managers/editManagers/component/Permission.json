@@ -1,0 +1,79 @@
+{
+  "roles": [
+    {
+      "name": "Dashboard",
+      "delete": false,
+      "edit": false,
+      "view": false,
+      "add": false
+    },
+   
+    {
+      "name": "Users",
+      "delete": false,
+      "edit": false,
+      "view": false,
+      "add": false
+    },
+   
+    {
+      "name": "Professionals",
+      "delete": false,
+      "edit": false,
+      "view": false,
+      "add": false
+    },
+   
+    {
+      "name": "Business",
+      "delete": false,
+      "edit": false,
+      "view": false,
+      "add": false
+    },
+    {
+      "name": "City",
+      "delete": false,
+      "edit": false,
+      "view": false,
+      "add": false
+    },
+    {
+      "name": "Category",
+      "delete": false,
+      "edit": false,
+      "view": false,
+      "add": false
+    },
+    {
+      "name": "Requests",
+      "delete": false,
+      "edit": false,
+      "view": false,
+      "add": false
+    },
+    { "name": "comments", "delete": 0, "edit": 0, "view": false, "add": 0 },
+    {
+      "name": "Sliders",
+      "delete": false,
+      "edit": false,
+      "view": false,
+      "add": false
+    },
+    {
+      "name": " Notifications ",
+      "delete": false,
+      "edit": false,
+      "view": false,
+      "add": false
+    },
+    {
+      "name": "Support",
+      "delete": 0,
+      "edit": false,
+      "view": false,
+      "add": 0
+    }
+  ]
+}
+

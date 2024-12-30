@@ -1,0 +1,174 @@
+.modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 5px;
+}
+
+.input label {
+  font-size: 15px;
+  margin-right: 5px;
+}
+
+.input input {
+  border-radius: 10px;
+  border: 1px solid rgb(139, 151, 173);
+  padding: 10px 7px;
+  margin-top: 7px;
+}
+
+.headerText {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+  border-bottom: 1px dotted rgba(139, 151, 173, 0.482);
+  padding-bottom: 5px;
+}
+
+.input input:focus {
+  outline: 1px solid rgb(97, 105, 120);
+}
+
+.closeIcon {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.formContainer {
+  width: 25%;
+  background-color: white;
+  border: 2px solid transparent;
+  padding: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background-size: 200% 100%;
+  animation: gradient 3s ease infinite;
+}
+
+.date {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: column;
+  align-content: center;
+}
+.deleteTitle h1{
+  font-size:18px ;
+  text-align: center;
+  color: #535353;
+}
+.deleteButton{
+  background-color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+.loginContainerBtn {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+}
+
+.loginContainerBtnDis {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+}
+
+.loginContainerBtn button {
+  width: 40%;
+  background-color: #ef4056;
+  border: 1px solid #ef4056;
+  border-radius: 8px;
+  color: white;
+  padding: 7px 0;
+  font-size: 15px;
+  font-family: shabnam;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginContainerBtnDis button {
+  width: 40%;
+  background-color: #c4c4c4;
+  border: 1px solid #c4c4c4;
+  border-radius: 8px;
+  color: white;
+  padding: 7px 0;
+  font-size: 15px;
+  font-family: shabnam;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader {
+  border: 3px solid rgba(255, 255, 255, 0.557);
+  border-left-color: transparent;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+
+  animation: spin89345 1s linear infinite;
+}
+
+@keyframes spin89345 {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .formContainer {
+    width: 95%;
+  }
+}

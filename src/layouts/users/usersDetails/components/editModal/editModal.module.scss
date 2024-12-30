@@ -1,0 +1,91 @@
+
+.modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  overflow: auto;
+}
+.header{
+  margin-bottom: 20px;
+}
+.headerText {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+  padding-bottom: 5px;
+  font-size: 17px;
+  font-weight: bold;
+  color: rgb(35, 3, 151);
+}
+
+.closeIcon {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.formContainer {
+  width: 45%;
+  max-height: 90vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: white;
+  border: 2px solid transparent;
+  padding: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border-radius: 10px;
+  // background-size: 200% 100%;
+}
+
+.userInfosContainer {
+  display: flex;
+  
+  flex-wrap: wrap;
+
+  .userInfosInput {
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 30%;
+    margin-left: 8px !important;
+  }
+
+//   input,
+//   select {
+//     width: 100%;
+//     border: 1px solid #f9f9f9;
+//     background: #f0eeee;
+//     border-radius: 5px;
+//     padding: 9px 12px;
+//     margin-top: 10px;
+//     transition: all 0.2s ease;
+//   }
+
+  // input:focus,
+  // select:focus {
+  //   outline: none;
+  //   background: #e6e6e6;
+  // }
+
+//   input::placeholder {
+//     color: #7d7d7d;
+//     font-size: 15px;
+//   }
+}
+@media screen and (max-width: 1000px) {
+  .formContainer {
+    width: 95%;
+  }
+}

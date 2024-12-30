@@ -1,0 +1,57 @@
+.addContainer {
+  width: 100%;
+}
+.contantAddForm {
+  width: 90%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0;
+}
+
+.contantAddForm .formItem {
+  width: 50%;
+  min-width: 230px;
+  margin: 10px 20px;
+}
+.contantAddForm .webSiteForm {
+  width: 38%;
+  min-width: 460px;
+  margin: 10px 8px;
+}
+
+.uncompleted {
+  border: 1px solid red !important;
+  &::placeholder {
+    color: red !important;
+  }
+}
+.errorText {
+  font-size: 10px;
+  width: 100%;
+  margin: 0;
+}
+
+@media screen and (max-width: 850px) {
+  .contantAddForm .formItem {
+    width: 90%;
+    margin: auto;
+  }
+
+  .contantAddForm .formItem input {
+    width: 90%;
+  }
+
+  @media screen and (max-width: 450px) {
+    .contantAddForm .formItem {
+      width: 90%;
+      margin: auto;
+    }
+
+    .contantAddForm .formItem input {
+      width: 90%;
+    }
+  }
+}

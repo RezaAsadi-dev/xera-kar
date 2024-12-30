@@ -1,0 +1,21 @@
+#radioGroup .flex.flex-col.flex-wrap.gap-2.data-\[orientation\=horizontal\]\:flex-row, .capitalize{
+    width:100%;
+    max-width: 280px;
+    height: 40px ;
+    /* border: 1px solid #f9f9f9; */
+    background: #ffffff;
+    border-radius:12px;
+    padding: 2px 12px;
+    border: 2px solid rgb(238, 238, 238);
+    transition: all 0.2s ease;
+    margin-right: 20px;
+}
+.group.relative.max-w-fit.inline-flex.items-center.justify-start.cursor-pointer.tap-highlight-transparent.p-2.-m-2{
+margin:0  3px;   
+margin-bottom: 5px;      
+}
+#radioGroup .text-medium{
+    font-size: 12px !important;
+}
+ 
+  

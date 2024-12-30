@@ -1,0 +1,194 @@
+ 
+.addContainer {
+  width: 100%;
+  margin: auto;
+}
+.contantAddForm {
+  width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  margin: auto;
+  padding: 20px 10px 30px;
+}
+
+.contantAddForm .formItem {
+  width: 18%; 
+  min-width: 240px;
+  margin:10px 8px;
+  // border: 13px;
+}
+
+.contantAddForm .webSiteForm {
+  width:38%;
+  min-width: 460px;
+  margin:10px 8px;
+}
+.contantAddForm .formItem:nth-last-child(2) {
+width:92% !important;
+}
+.contantAddForm .formItem div input  ,.formitem textarea{
+  width: 100%;
+  max-width:300px;
+  height: 40px;
+  // border: 1px solid #f9f9f9;
+  background: #ffffff;
+  border: 2px solid rgb(238, 238, 238);
+  border-radius: 12px ;
+  padding: 9px 12px;
+  font-size:15px;
+  transition: all 0.2s ease;
+  // margin-right: 20px;
+}
+textarea.inputField{
+height:200px ;
+border-radius:20px !important ;
+background: #ffffff !important;
+border: 2px solid rgb(238, 238, 238) ;
+
+}
+ 
+.contantAddForm .formItem input:focus {
+  outline: none;
+  background: #e6e6e6;
+}
+
+.contantAddForm .recieverItem input::placeholder {
+   
+  font-size: 14px !important;
+}
+.contantAddForm .formItem  input::placeholder {
+  color: #909090;
+  font-size: 10px;
+}
+// .contantAddForm .formItem input:nth-of-type(2)::placeholder {
+//   color: inherit; 
+//   font-size:5px; 
+// }
+ label{
+padding:5px 10px;
+color: rgb(137, 128, 157);
+font-size: 14px;
+}
+.uncompleted {
+  border: 1px solid red !important;
+  &::placeholder {
+    color: red !important;
+  }
+}
+.errorText {
+  font-size: 10px;
+  width: 100%;
+  margin: 0;
+}
+
+@media screen and (max-width: 850px) {
+  .contantAddForm .formItem {
+    width: 90%;
+    margin: auto;
+  }
+
+   .contantAddForm .formItem input {
+    width: 90%;
+  }
+
+  
+  textarea.inputField{
+    width:100% !important;
+  }
+
+}
+.buttonContainer{
+ width: 100%;
+}
+
+ 
+.recievers{
+  position: relative;
+input{
+  cursor: pointer;
+  
+}
+ 
+}
+  .eachProf {
+    cursor: pointer;
+    width:100%;
+    height: 30px;
+    display: flex;
+    justify-content:center;
+    margin-bottom: 1px;
+    border-radius: 6px;
+    background-color: #f9f8f8c6;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #e2e0e0;
+    }
+    p {
+      padding-right: 30px;
+      padding-left: 30px;
+      font-size: 11px;
+      color: gray;
+      padding: 10px 10px;
+      width: 100%;
+    }
+  }
+ 
+  .dropDownMenu{
+    background-color: rgb(247, 247, 249);
+    padding:3px;
+    position:absolute;
+    top: 86px;
+    z-index: 1000;
+    nav{
+      display: flex;
+      justify-content: center;
+      margin:1px !important;
+       ul{
+       cursor: pointer;
+    }
+    }
+ 
+   }
+   .errorMessage{
+    margin:10px;
+    font-size: 9px;
+    color: rgb(218, 90, 130);
+   }
+
+ //search box styles
+   .searchContainer {
+    position: relative;
+    display: inline-block;
+    width: 95%;
+    margin:5px;
+  }
+  
+  .searchIcon {
+    position: absolute;
+    right: 20px;
+    top: 28px;
+    transform: translateY(-50%);
+    color: #888;
+  }
+  
+  .searchInput {
+    padding-left: 30px; /* Adjust based on icon size and positioning */
+    padding-right: 10px;
+    font-size: 12px; /* Adjust font size as needed */
+    border: 1px solid #ffffff !important;
+    border-radius: 4px;
+    height: 38px !important;
+    color: rgb(118, 140, 213);
+  }
+
+.notifInput input {
+  height: 40px;
+  width: 240px;
+  border-radius: 12px;
+  margin: 0;
+}
+.notifInput input :selection{
+  border: 2px solid black;
+
+}

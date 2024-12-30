@@ -1,0 +1,67 @@
+.main {
+  display: flex;
+  height: 90vh;
+  justify-content: center;
+  align-items: center;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  flex-direction: row-reverse;
+  align-items: center;
+
+  .mainImage {
+    width: 60%;
+    position: relative;
+    right: 138px;
+  }
+  img {
+    width: 100%;
+  }
+
+  .mainTitle {
+    width: 40%;
+  }
+}
+
+.errorCode {
+  font-weight: bold;
+  font-size: 150px;
+  color: #261f9a;
+}
+
+.Page404Title {
+  font-size: 60px;
+  margin: 15px 0px;
+  font-weight: bold;
+  position: relative;
+  bottom: 40px;
+}
+
+.mainTitle p {
+  font-size: 25px;
+  color: #261f9a;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    flex-direction: column !important;
+    align-items: stretch;
+    .mainImage {
+      width: 70%;
+      position: relative;
+      right: 138px;
+    }
+    img {
+      width: 100%;
+    }
+
+    .mainTitle {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+}

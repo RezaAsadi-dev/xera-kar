@@ -1,0 +1,32 @@
+.sub {
+    width: 50%;
+    margin: 15px auto;
+    list-style: disc !important;
+
+
+}
+
+.sub li {
+    padding: 5px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.sub li:hover {
+    color: rgb(52, 71, 103);
+}
+
+.notactive {
+    color: rgba(58, 65, 111, 0.7);
+    font-weight: 400;
+    font-size: 0.9rem;
+    opacity: 1;
+    transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.activated {
+    color: rgb(52, 71, 103);
+    font-weight: 500;
+    font-size: 0.95rem;
+    opacity: 1;
+    transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}

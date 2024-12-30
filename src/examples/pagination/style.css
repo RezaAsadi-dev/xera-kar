@@ -1,0 +1,8 @@
+ 
+.paginationPart ul li:nth-child(2) {
+    transform: rotate(180deg);
+}
+
+.paginationPart ul li:last-child {
+    transform:rotate(180deg) ;
+}

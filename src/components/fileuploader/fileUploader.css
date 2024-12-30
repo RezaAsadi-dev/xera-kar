@@ -1,0 +1,184 @@
+.file-upload-form {
+  margin: 40px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-upload-label input {
+  display: none;
+}
+.file-upload-label svg {
+  height: 50px;
+  fill: rgb(82, 82, 82);
+  margin-bottom: 20px;
+}
+.file-upload-label {
+  cursor: pointer;
+  background-color: #ddd;
+  padding: 30px 70px;
+  border-radius: 40px;
+  border: 2px dashed rgb(82, 82, 82);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.719);
+  width: 400px;
+  }
+
+
+.file-upload-design {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.browse-button {
+  background-color: rgb(82, 82, 82);
+  padding: 5px 15px;
+  border-radius: 10px;
+  color: white;
+  transition: all 0.3s;
+}
+
+.browse-button:hover {
+  background-color: rgb(14, 14, 14);
+}
+
+.preview-container {
+  position: relative;
+display: flex;
+justify-content: center;
+align-items: center;
+  max-width: 100%;
+  max-height: 250px;
+}
+
+.preview-image {
+  border-radius: 35px;
+  width: 80% !important;
+  height: 100%;
+  max-height: 300px;
+  min-width: 345px;
+  object-fit: cover;
+}
+
+.delete-button {
+  position: absolute;
+  top: 15px;
+  left: 65px !important;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  /* Adjust size for better appearance */
+}
+
+
+.file-upload-form {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  /* Centering the uploader and preview */
+  gap: 20px;
+  width: 100%;
+  /* Full width */
+}
+
+.preview-container {
+  position: relative;
+  flex: 2;
+  /* Makes the preview container wider than the uploader */
+  max-width: 100%;
+  height: 250px;
+  /* Matches height of the uploader */
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .file-upload-form {
+    flex-direction: column;
+    /* Stack in column layout for smaller screens */
+    align-items: center;
+    /* Center items in the column */
+  }
+  .file-upload-label {
+    cursor: pointer;
+    background-color: #ddd;
+    padding: 30px 70px;
+    border-radius: 40px;
+    border: 2px dashed rgb(82, 82, 82);
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.719);
+    width: 270px;
+    }
+  .preview-container {
+    margin-top: 10px;
+    /* Space between uploader and preview */
+    width: 100%;
+    /* Full width for the preview container */
+    max-height: 250px;
+    /* Maintain a maximum height */
+    overflow: hidden;
+    /* Prevent overflow */
+  }
+  
+
+  .preview-image {
+    border-radius: 35px;
+  width: 80% !important;
+  height: 100%;
+  max-height: 300px;
+  min-width: 345px;
+  object-fit: cover;
+  }
+
+  .delete-button {
+    margin: 0;
+    /* Remove margin to keep it positioned correctly */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1144px) {
+  .file-upload-form {
+    flex-direction: row;
+    /* Maintain row layout */
+    justify-content: center;
+    /* Center items */
+  }
+
+  .preview-container {
+    margin-top: 0;
+    /* No margin at the top */
+    width: auto;
+    /* Adjust width as needed */
+    max-height: 250px;
+    /* Keep max-height */
+    display: flex;
+    /* Ensure flex behavior */
+  }
+
+  .preview-image {
+    border-radius: 35px;
+    width: 80% !important;
+    height: 100%;
+    max-height: 300px;
+    min-width: 345px;
+    object-fit: cover;
+  }
+
+  .delete-button {
+    position: absolute;
+    /* Keep it in the corner */
+    top: 5px;
+    /* Position correctly */
+    left: 5px;
+    /* Position correctly */
+  }
+}
