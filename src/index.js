@@ -9,7 +9,6 @@ import { SoftUIControllerProvider } from "context";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import { NextUIProvider } from "@nextui-org/react";
-import { SpeedInsights } from "@vercel/speed-insights/react"
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -19,7 +18,6 @@ root.render(
       <SoftUIControllerProvider>
         <Provider store={store}>
           <App />
-          <SpeedInsights />
         </Provider>
       </SoftUIControllerProvider>
     </NextUIProvider>
