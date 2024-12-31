@@ -118,7 +118,7 @@ export default function Options({ openModal, refetch, onClick, phoneNumber, user
         open={open}
         onClose={handleClose}
       >
-        <MenuItem
+        {/* <MenuItem
           onClick={(e) => {
             handleClose();
             handleClick(e, "details", userId);
@@ -127,7 +127,7 @@ export default function Options({ openModal, refetch, onClick, phoneNumber, user
         >
           <FiInfo className="mr-[12px]" />
           Detail
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem
           onClick={(e) => {
             handleClose();

@@ -98,7 +98,7 @@ function Managers() {
                         <tr key={item._id}>
                           <td>{index + 1}</td>
                           <td>{item.user}</td>
-                          <td>{item.email}</td>
+                          <td>{item.email?item.email:"-"}</td>
                           <td>{item.phone}</td>
                           <td>
                             <Options id={item._id} openModal={() => handleChange(item._id)} />

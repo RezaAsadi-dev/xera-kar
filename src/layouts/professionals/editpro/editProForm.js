@@ -158,8 +158,8 @@ export default function EditProForm() {
   return (
     <>
       <div className={style.addContainer}>
-        <form className={`${style.contantAddForm}  !grid !grid-cols-1 md:!grid-cols-2 gap-6`}>
-          <div className="!md:mt-[-150px] sm:mt-[-150px]">
+        <form className={`${style.contantAddForm}  !grid !grid-cols-1 xl:!grid-cols-2 gap-6`}>
+          <div className=" px-4 ">
             <div className="grid  sm:grid-cols-2">
               <div className={style.formItem}>
                 <Input
@@ -222,7 +222,7 @@ export default function EditProForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label="Country"
-                  // isInvalid={errors.phone && focus.phone}
+                // isInvalid={errors.phone && focus.phone}
                 >
                   {countriesData.map((item) => (
                     <SelectItem key={item.name}>{item.name}</SelectItem>
@@ -274,7 +274,7 @@ export default function EditProForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Category "
-                  // isInvalid={errors.phone && focus.phone}
+                // isInvalid={errors.phone && focus.phone}
                 >
                   <SelectItem key="programming">Programming</SelectItem>
                   <SelectItem key="programming">Programming</SelectItem>
@@ -296,7 +296,7 @@ export default function EditProForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Subcategory "
-                  // isInvalid={errors.phone && focus.phone}
+                // isInvalid={errors.phone && focus.phone}
                 >
                   <SelectItem key="frontend">frontend</SelectItem>
                   <SelectItem key="backend">backend</SelectItem>
@@ -333,7 +333,7 @@ export default function EditProForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label="Status"
-                  // isInvalid={errors.phone && focus.phone}
+                // isInvalid={errors.phone && focus.phone}
                 >
                   {statusSelect.map((item) => (
                     <SelectItem key={item.key} value={item}>
@@ -354,8 +354,8 @@ export default function EditProForm() {
             </div>
           </div>
 
-          <div className="">
-            <Card>
+          <div className=" flex justify-center ">
+            <Card className=" xl:w-[500px] ">
               {/* Main Media Display */}
               <div
                 className="main-media-display"
@@ -464,24 +464,26 @@ export default function EditProForm() {
               </div>
             </Card>
           </div>
-
-          <div className="w-full flex justify-center !md:mt-[-70px] sm:mt-[-70px] gap-4 mb-6">
-            <Button
-              variant="solid"
-              className="w-[130px] h-[40px] bg-[#15a380] text-green-50 ml-3 mb-4"
-              onClick={submitHandler}
-            >
-              Edit
-            </Button>
-            <Button
-              variant="flat"
-              className="w-[130px] bg-red-500 text-white ml-3 "
-              onClick={deleteHandler}
-            >
-              {" "}
-              Cancel{" "}
-            </Button>
+          <div className="w-full">
+            <div className="w-full flex justify-center  gap-4 mb-6">
+              <Button
+                variant="solid"
+                className="w-[130px] h-[40px] bg-[#15a380] text-green-50 ml-3 mb-4"
+                onClick={submitHandler}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="flat"
+                className="w-[130px] bg-red-500 text-white ml-3 "
+                onClick={deleteHandler}
+              >
+                {" "}
+                Cancel{" "}
+              </Button>
+            </div>
           </div>
+
         </form>
       </div>
     </>

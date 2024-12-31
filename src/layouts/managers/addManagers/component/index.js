@@ -23,7 +23,7 @@ const AddManagersForm = () => {
 
   const [data, setData] = useState({
     user: "",
-    name: "",
+    email: "",
     phone: "",
     password: "",
     confirmpassword: "",
@@ -92,8 +92,8 @@ const AddManagersForm = () => {
         {
           user: data.user,
           email: data.email,
-          pass: data.password,
           phone: data.phone,
+          pass: data.password,
           access: roles,
           cat: "Public",
         },
@@ -186,7 +186,7 @@ const AddManagersForm = () => {
         <table className={style.table}>
           <thead>
             <tr>
-              <th></th>
+              <th>Section</th>
               <th> Accessibility </th>
       
             </tr>

@@ -15,11 +15,16 @@ export default function EditBusinessForm() {
   const [errors, setErrors] = useState({});
   const [data, setData] = useState({
     coName: "",
-    name: "",
-    email: "",
     phone: "",
-    gender: "",
-    dateTime: "",
+    email: "",
+    country: "",
+    coAddress: "",
+    services_products: "",
+    category: "",
+    subcategory: "",
+    yearOfExperience: "",
+    coWebsite: "",
+    description: "",
     status: "",
     images: [
       { id: 1, url: "https://via.placeholder.com/150" },
@@ -156,8 +161,8 @@ export default function EditBusinessForm() {
   return (
     <>
       <div className={style.addContainer}>
-        <form className={`${style.contantAddForm}  !grid !grid-cols-1 md:!grid-cols-2 gap-6`}>
-          <div className="!md:mt-[-150px] sm:mt-[-150px]">
+        <form className={`${style.contantAddForm} !grid !grid-cols-1 xl:!grid-cols-2 gap-6`}>
+          <div className=" px-4">
             <div className="grid  sm:grid-cols-2">
               <div className={style.formItem}>
                 <Input
@@ -172,14 +177,14 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Company name "
-                  isInvalid={errors.username && focus.username}
+                  isInvalid={errors.coName && focus.coName}
                 />
               </div>
               <div className={style.formItem}>
                 <Input
                   color="light"
                   type="number"
-                  name="coPhoneNumber"
+                  name="phone"
                   onFocus={focusHandler}
                   onChange={changeHandler}
                   classNames={{
@@ -188,7 +193,7 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label="  Company Phone  "
-                  isInvalid={errors.name && focus.name}
+                  isInvalid={errors.phone && focus.phone}
                 />
               </div>
 
@@ -220,7 +225,7 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label="Country"
-                  // isInvalid={errors.phone && focus.phone}
+                  isInvalid={errors.country && focus.country}
                 >
                   {countriesData.map((item) => (
                     <SelectItem key={item.name}>{item.name}</SelectItem>
@@ -240,7 +245,7 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Company Address "
-                  isInvalid={errors.email && focus.email}
+                  isInvalid={errors.coAddress && focus.coAddress}
                 />
               </div>
 
@@ -257,7 +262,7 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Services & Products "
-                  isInvalid={errors.email && focus.email}
+                  isInvalid={errors.services_products && focus.services_products}
                 />
               </div>
               <div className={style.formItem}>
@@ -272,7 +277,7 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Category "
-                  // isInvalid={errors.phone && focus.phone}
+                  isInvalid={errors.category && focus.category}
                 >
                   <SelectItem key="programming">Programming</SelectItem>
                   <SelectItem key="programming">Programming</SelectItem>
@@ -294,7 +299,7 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Subcategory "
-                  // isInvalid={errors.phone && focus.phone}
+                  isInvalid={errors.subcategory && focus.subcategory}
                 >
                   <SelectItem key="frontend">frontend</SelectItem>
                   <SelectItem key="backend">backend</SelectItem>
@@ -315,13 +320,13 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Year Of Experience "
-                  isInvalid={errors.email && focus.email}
+                  isInvalid={errors.yearOfExperience && focus.yearOfExperience}
                 />
               </div>
               <div className={style.formItem}>
                 <Input
                   color="light"
-                  type="link"
+                  type="text"
                   name="coWebsite"
                   onFocus={focusHandler}
                   onChange={changeHandler}
@@ -331,22 +336,23 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Company Website "
-                  isInvalid={errors.email && focus.email}
+                  isInvalid={errors.coWebsite && focus.coWebsite}
                 />
               </div>
             </div>
             <div className={`${style.formItem} !w-[95%] `}>
               <Textarea
                 variant="bordered"
-                label="About Professional"
+                label="About Company"
                 labelPlacement="outside"
                 placeholder="Enter your description"
-                className="text-gray-700  "
+                className="text-gray-700 "
+                isInvalid={errors.description && focus.description}
               />
             </div>
           </div>
-          <div className="">
-            <Card>
+          <div className="flex justify-center">
+            <Card className=" xl:w-[500px]" >
               {/* Main Media Display */}
               <div
                 className="main-media-display"
@@ -455,24 +461,26 @@ export default function EditBusinessForm() {
               </div>
             </Card>
           </div>
-
-          <div className="w-full flex justify-center !md:mt-[-70px] sm:mt-[-70px] gap-4 mb-6">
-            <Button
-              variant="solid"
-              className="w-[130px] h-[40px] bg-[#15a380] text-green-50 ml-3 mb-4"
-              onClick={submitHandler}
-            >
-              Edit
-            </Button>
-            <Button
-              variant="flat"
-              className="w-[130px] bg-red-500 text-white ml-3 "
-              onClick={deleteHandler}
-            >
-              {" "}
-              Cancel{" "}
-            </Button>
+          <div className="w-full">
+            <div className="w-full flex justify-center  gap-4 mb-6">
+              <Button
+                variant="solid"
+                className="w-[130px] h-[40px] bg-[#15a380] text-green-50 ml-3 mb-4"
+                onClick={submitHandler}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="flat"
+                className="w-[130px] bg-red-500 text-white ml-3 "
+                onClick={deleteHandler}
+              >
+                {" "}
+                Cancel{" "}
+              </Button>
+            </div>
           </div>
+
         </form>
       </div>
     </>

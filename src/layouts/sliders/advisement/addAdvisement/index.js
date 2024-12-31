@@ -1,12 +1,9 @@
 import React, { useEffect } from "react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
-import SoftButton from "components/SoftButton";
 import Card from "@mui/material/Card";
 import accessPage from "helper/functios";
 import AddAdvisementForm from "./addAdvismentForm";

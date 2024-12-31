@@ -24,16 +24,18 @@ import style from "./style.module.css";
 // import { BiSolidCategoryAlt, BiSupport } from "react-icons/bi";
 import { Divider } from "@nextui-org/react";
 function ManagersCardInfo({ title, permissions }) {
+  console.log(permissions);
+  
   const allPermissions = [
-    { name: "Dashboard", delete: true, edit: true, view: true, add: true },
-    { name: "Users", delete: true, edit: true, view: true, add: true },
-    { name: "Professionals", delete: true, edit: true, view: true, add: true },
-    { name: "Category", delete: true, edit: true, view: true, add: true },
-    { name: "Request ", delete: true, edit: true, view: true, add: true },
-    { name: "Comments", delete: true, edit: true, view: true, add: true },
-    { name: " Slider", delete: true, edit: true, view: true, add: true },
-    { name: "Notifications", delete: true, edit: true, view: true, add: true },
-    { name: "Support ", delete: true, edit: true, view: true, add: true },
+    { name: "Dashboard",  access:true },
+    { name: "Users",  access:true },
+    { name: "Professionals",  access:true },
+    { name: "Category",  access:true },
+    { name: "Request ",  access:true },
+    { name: "Comments",  access:true },
+    { name: " Slider", access:true },
+    { name: "Notifications", access:true },
+    { name: "Support ", access:true},
   ];
   // const iconMapping = {
   //   Dashboard: <FaUserTie />,
@@ -58,13 +60,13 @@ function ManagersCardInfo({ title, permissions }) {
         position="left"
       >
         {permissions &&
-          permissions.map((permission, index) => (
-            <React.Fragment key={index}>
+          allPermissions.map((permission, index) => (
+            <div className=" grid grid-cols-2" key={index}>
               <div className={style.titleContainer}>
-                {[permission.name]} {permission.name}
+                {[permission.name]} 
               </div>
 
-              {["delete", "edit", "view", "add"].map((action, subIndex) => (
+              {["access"].map((action, subIndex) => (
                 <TimelineItem key={`${index}-${subIndex}`}>
                   <TimelineOppositeContent
                     sx={{
@@ -72,13 +74,11 @@ function ManagersCardInfo({ title, permissions }) {
                       marginTop: "8px",
                     }}
                   >
-                    {action === "delete"
-                      ? "Delete"
-                      : action === "edit"
-                      ? "Edit"
-                      : action === "view"
-                      ? "View"
-                      : "Add"}
+                    {console.log(action)
+                    }
+                    {action === "access"
+                      && "Access"
+                     }
                   </TimelineOppositeContent>
                   <TimelineSeparator>
                     <TimelineDot
@@ -91,11 +91,11 @@ function ManagersCardInfo({ title, permissions }) {
                         <CloseIcon style={{ color: "#fff" }} />
                       )}
                     </TimelineDot>
-                    {subIndex < 3 && <TimelineConnector />}
+                    {/* {subIndex < 3 && <TimelineConnector />} */}
                   </TimelineSeparator>
                 </TimelineItem>
               ))}
-            </React.Fragment>
+            </div>
           ))}
       </Timeline>
     );
@@ -174,7 +174,8 @@ function ManagersCardInfo({ title, permissions }) {
        <Divider className="my-3"/>
       <div className={style.accessContainer}>
         <SoftBox display="flex" justifyContent="space-between" alignItems="center" pt={2} px={2}>
-          {permissions === "full" ? renderPermissionsFull() : renderPermissions()}
+          {/* {permissions === "full" ? renderPermissionsFull() : renderPermissions()} */}
+          {renderPermissions()}
         </SoftBox>
       </div>
     </Card>

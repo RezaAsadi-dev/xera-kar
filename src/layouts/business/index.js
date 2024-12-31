@@ -13,7 +13,7 @@ import { Pagination } from "@nextui-org/react";
 import Lotties from "layouts/noData/Lotties";
 import { useDispatch } from "react-redux";
 import { handler } from "../../redux/loaderSlice";
-import { fetchApi, getxlxs } from "api";
+import { fetchApi } from "api";
 import accessPage from "helper/functios";
 import toast from "react-hot-toast";
 import SoftButton from "components/SoftButton";
@@ -29,7 +29,7 @@ export default function Business() {
   const [currentPage, setCurrentPage] = useState(1);
   const dispatch1 = useDispatch();
   const [userStatus, setUserStatus] = useState(true);
-  const [openDeleteModal, setDeleteModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const userurl = "v1/api/admin/user/fetch";
 
   const [filters, setFilters] = useState({

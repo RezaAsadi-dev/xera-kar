@@ -19,11 +19,16 @@ export default function AddBusinessForm() {
   const [errors, setErrors] = useState({});
   const [data, setData] = useState({
     coName: "",
-    name: "",
-    email: "",
     phone: "",
-    gender: "",
-    dateTime: "",
+    email: "",
+    country: "",
+    coAddress: "",
+    services_products: "",
+    category: "",
+    subcategory: "",
+    yearOfExperience: "",
+    coWebsite: "",
+    description: "",
     status: "",
   });
 
@@ -58,15 +63,16 @@ export default function AddBusinessForm() {
         addProUrl,
         {
           coName: data.coName,
-          coPhoneNumber: data.phone,
+          phone: data.phone,
           email: data.email,
           country: data.country,
           address: data.address,
           services_products: data.address,
           category: data.category,
+          subcategory: data.subcategory,
           yearOfExperience: data.yearOfExperience,
           coWebsite: data.coWebsite,
-          coAbout: data.coAbout,
+          description: data.description,
           status: data.status,
           dateTime: data.dateTime,
 
@@ -88,15 +94,16 @@ export default function AddBusinessForm() {
     } else {
       setFocus({
         coName: true,
+        phone: true,
         email: true,
-        coPhoneNumber: true,
         country: true,
         coAddress: true,
         services_products: true,
         category: true,
+        subcategory: true,
         yearOfExperience: true,
         coWebsite: true,
-        coAbout: true,
+        description: true,
         status: true,
         dateTime: true,
       });
@@ -127,14 +134,14 @@ export default function AddBusinessForm() {
                 variant="bordered"
                 labelPlacement="outside"
                 label=" Company name "
-                isInvalid={errors.username && focus.username}
+                isInvalid={errors.coName && focus.coName}
               />
             </div>
             <div className={style.formItem}>
               <Input
                 color="light"
                 type="number"
-                name="coPhoneNumber"
+                name="phone"
                 onFocus={focusHandler}
                 onChange={changeHandler}
                 classNames={{
@@ -143,7 +150,7 @@ export default function AddBusinessForm() {
                 variant="bordered"
                 labelPlacement="outside"
                 label="  Company Phone  "
-                isInvalid={errors.name && focus.name}
+                isInvalid={errors.phone && focus.phone}
               />
             </div>
 
@@ -175,7 +182,7 @@ export default function AddBusinessForm() {
                 variant="bordered"
                 labelPlacement="outside"
                 label="Country"
-              // isInvalid={errors.phone && focus.phone}
+              isInvalid={errors.country && focus.country}
               >
                 {countriesData.map((item) => (
                   <SelectItem key={item.name}>
@@ -197,7 +204,7 @@ export default function AddBusinessForm() {
                 variant="bordered"
                 labelPlacement="outside"
                 label=" Company Address "
-                isInvalid={errors.email && focus.email}
+                isInvalid={errors.coAddress && focus.coAddress}
               />
             </div>
             <div className={style.formItem}>
@@ -213,7 +220,7 @@ export default function AddBusinessForm() {
                 variant="bordered"
                 labelPlacement="outside"
                 label=" Services & Products "
-                isInvalid={errors.email && focus.email}
+                isInvalid={errors.services_products && focus.services_products}
               />
             </div>
             <div className={style.formItem}>
@@ -228,7 +235,7 @@ export default function AddBusinessForm() {
                 variant="bordered"
                 labelPlacement="outside"
                 label=" Category "
-              // isInvalid={errors.phone && focus.phone}
+              isInvalid={errors.category && focus.category}
               >
                 <SelectItem key="programming">Programming</SelectItem>
                 <SelectItem key="programming">Programming</SelectItem>
@@ -250,7 +257,7 @@ export default function AddBusinessForm() {
                 variant="bordered"
                 labelPlacement="outside"
                 label=" Subcategory "
-              // isInvalid={errors.phone && focus.phone}
+              isInvalid={errors.subcategory && focus.subcategory}
               >
                 <SelectItem key="frontend">frontend</SelectItem>
                 <SelectItem key="backend">backend</SelectItem>
@@ -271,7 +278,7 @@ export default function AddBusinessForm() {
                 variant="bordered"
                 labelPlacement="outside"
                 label=" Year Of Experience "
-                isInvalid={errors.email && focus.email}
+                isInvalid={errors.yearOfExperience && focus.yearOfExperience}
               />
             </div>
             <div className={style.formItem}>
@@ -287,7 +294,7 @@ export default function AddBusinessForm() {
                 variant="bordered"
                 labelPlacement="outside"
                 label=" Company Website "
-                isInvalid={errors.email && focus.email}
+                isInvalid={errors.coWebsite && focus.coWebsite}
               />
             </div>
           </div>
@@ -305,6 +312,8 @@ export default function AddBusinessForm() {
               labelPlacement="outside"
               placeholder="Enter your description"
               className="text-gray-700 "
+              isInvalid={errors.description && focus.description}
+
             />
           </div>
         </form>

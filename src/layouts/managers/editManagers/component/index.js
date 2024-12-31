@@ -24,7 +24,6 @@ const EditManagersForm = () => {
   const { id } = useParams();
 
   const [showPass, setShowPass] = useState({
-    pass: false,
     newPassword: false,
     repeatNewPassword: false,
   });
@@ -38,11 +37,10 @@ const EditManagersForm = () => {
 
   const [data, setData] = useState({
     user: "",
-    name: "",
+    email: "",
     phone: "",
     newPassword: "",
     repeatNewPassword: "",
-    password: "",
   });
 
   const [focus, setFocus] = useState({});
@@ -160,15 +158,15 @@ const EditManagersForm = () => {
             <Input
               color="light"
               type="text"
-              name="name"
+              name="user"
               onFocus={handleFocus}
               onChange={handleInputChange}
               classNames={{ input: ["text-[14px] "] }}
               variant="bordered"
               labelPlacement="outside"
               label="User name "
-              value={data.name}
-              isInvalid={errors.name && focus.name}
+              value={data.user}
+              isInvalid={errors.user && focus.user}
             />
           </div>
           <div className={style.formItem}>
@@ -280,7 +278,7 @@ const EditManagersForm = () => {
         <table className={style.table}>
           <thead>
             <tr>
-              <th> </th>
+              <th>Section</th>
               <th>Accrssibility</th>
             </tr>
           </thead>

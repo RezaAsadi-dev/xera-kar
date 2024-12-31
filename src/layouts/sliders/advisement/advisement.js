@@ -5,7 +5,7 @@ import SoftBox from "components/SoftBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import style from "./style.module.scss";
-import { fetchApi, getxlxs } from "api";
+import { fetchApi } from "api";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { handler } from "../../../redux/loaderSlice";
@@ -29,7 +29,7 @@ export default function Advisement() {
   const [totalPages, setTotalPages] = useState();
   const [number, setnumber] = useState();
   const [data, setData] = useState([]);
-  const [openDeleteModal, setDeleteModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null); // New state for modal image
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 

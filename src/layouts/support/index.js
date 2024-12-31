@@ -8,9 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { Pagination } from "@nextui-org/react";
 import { handler, selectLoader } from "../../redux/loaderSlice";
-import { RiUserStarFill, RiUser2Fill } from "react-icons/ri";
-import Card from "@mui/material/Card";
-
 import {
   FiLoader,
   FiUpload,
@@ -461,7 +458,7 @@ const Ticket = ({ message, setSelectedImage, senderName }) => {
   return (
     <>
       {sender_type === "team" ? (
-        <div className="flex flex-col items-start max-w-[60%] ml-auto mb-6">
+        <div className="flex flex-col items-start  ml-auto mb-6">
           <div className="flex flex-wrap w-full mb-2">
             {type === "txt" && (
               <p className="break-words w-fit text-white text-base px-4 py-3 bg-[#4cc1f8] shadow-sm rounded-l-xl rounded-tr-xl rounded-br-none">
@@ -469,7 +466,7 @@ const Ticket = ({ message, setSelectedImage, senderName }) => {
                   .trim()
                   .split("\n")
                   .map((text, index) => (
-                    <span className="block" key={index}>{text}</span>
+                    <span className="block text-wrap max-w-[200px] md:max-w-[350px] lg:max-w-[500px]" key={index}>{text}</span>
                   ))}
               </p>
             )}
@@ -490,7 +487,7 @@ const Ticket = ({ message, setSelectedImage, senderName }) => {
           </p>
         </div>
       ) : (
-        <div className="flex flex-col w-fit items-start max-w-[60%] mr-auto mb-6">
+        <div className="flex flex-col w-fit items-start  mr-auto mb-6">
           <div className="flex flex-wrap w-full mb-2">
             {type === "txt" && (
               <p className="break-words w-fit mr-auto text-base px-4 py-3 bg-white shadow-sm rounded-r-xl rounded-tl-xl rounded-bl-none">
@@ -498,7 +495,7 @@ const Ticket = ({ message, setSelectedImage, senderName }) => {
                   .trim()
                   .split("\n")
                   .map((text, index) => (
-                    <span className="block" key={index}>{text}</span>
+                    <span className="block text-wrap max-w-[200px] md:max-w-[350px] lg:max-w-[500px]" key={index}>{text}</span>
                   ))}
               </p>
             )}

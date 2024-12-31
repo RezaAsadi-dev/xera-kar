@@ -8,7 +8,21 @@ const validate = (data) => {
     errors.user = "user must be at least 5 characters";
   }
 
+// Validate Phone
+  if (!data.phone) {
+    errors.phone = "Phone number is required";
+  } else if (data.phone.length !== 11) {
+    errors.phone = "Phone number must be exactly 11 digits";
+  }
 
+  // Validate Email
+  if (!data.email) {
+    errors.email = "Email is required";
+  } else if (
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(data.email)
+  ) {
+    errors.email = "Email is invalid";
+  }
 
   // Validate Password
   if (!data.password) {
@@ -17,13 +31,7 @@ const validate = (data) => {
     errors.password = "Password must be 6 characters or more";
   }
 
-  // Validate Phone
-  if (!data.phone) {
-    errors.phone = "Phone number is required";
-  } else if (data.phone.length !== 11) {
-    errors.phone = "Phone number must be exactly 11 digits";
-  }
-
+  
   // Validate Confirm Password
   if (!data.confirmpassword) {
     errors.confirmpassword = "Confirm password is required";

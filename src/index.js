@@ -11,6 +11,7 @@ import { store } from "./redux/store";
 import { NextUIProvider } from "@nextui-org/react";
 
 
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>

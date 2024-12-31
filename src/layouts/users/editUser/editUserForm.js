@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import style from "./style.module.scss";
-import { FaCheck } from "react-icons/fa";
-import { AiFillStop } from "react-icons/ai";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
@@ -11,7 +9,7 @@ import { green } from "@mui/material/colors";
 import validate from "./validate";
 import { fetchApi } from "api";
 import { Button, Checkbox, Input, Select, SelectItem } from "@nextui-org/react";
-import countriesData from "assets/countries/countries.json"
+import countriesData from "assets/countries/countries.json";
 
 export default function EditUserForm() {
   const addProUrl = "v1/api/admin/agent/add";
@@ -29,23 +27,7 @@ export default function EditUserForm() {
     dateTime: "",
     status: "",
   });
-  
-  const ButtonStyle = styled(Button)(({ theme }) => ({
-    color: theme.palette.getContrastText(red[800]),
-    backgroundColor: red[800],
-    width: 150,
-    "&:hover": {
-      backgroundColor: red[700],
-    },
-  }));
-  const ButtonStyle2 = styled(Button)(({ theme }) => ({
-    color: theme.palette.getContrastText(green[800]),
-    width: 150,
-    backgroundColor: green[800],
-    "&:hover": {
-      backgroundColor: green[700],
-    },
-  }));
+
   const deleteHandler = () => {
     navigate("/users", { replace: true });
   };
@@ -64,7 +46,9 @@ export default function EditUserForm() {
 
   const focusHandler = (event) => {
     setFocus({ ...focus, [event.target.name]: true });
+    console.log(event.target.name)
   };
+
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -76,18 +60,18 @@ export default function EditUserForm() {
         {
           name: data.name,
           email: data.email,
-          phoneNumber: data.phone,
+          phone: data.phone,
           country: data.country,
           city: data.city,
+          address: data.address,
           dateTime: data.dateTime,
           status: data.status,
-       
         },
         "post"
       ).then((res) => {
         //(res);
         if (res.status_code === 200) {
-          toast.success(" User registered successfully! ");
+          toast.success(" User edited successfully! ");
           navigate("/Users");
         } else if (res.status_code === 401) {
           if (res.description === "unauthorized") {
@@ -110,14 +94,16 @@ export default function EditUserForm() {
       });
     }
   };
-  const selectChange = (e) => {
-    console.log(e.target.value);
+  const selectChange = (value) => {
+    setData({
+      ...data,
+      country: value,  // Set the selected country here
+    });
   };
- 
-  useEffect(()=>{
-  console.log(data);
-  
-  },[data])
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
   return (
     <>
       <div className={style.addContainer}>
@@ -139,7 +125,7 @@ export default function EditUserForm() {
               variant="bordered"
               labelPlacement="outside"
               label=" Name "
-              isInvalid={errors.username && focus.username}
+              isInvalid={errors.name && focus.name}
             />
           </div>
           <div className={style.formItem}>
@@ -162,7 +148,7 @@ export default function EditUserForm() {
             <Input
               color="light"
               type="number"
-              name="phoneNumber"
+              name="phone"
               onFocus={focusHandler}
               onChange={changeHandler}
               classNames={{
@@ -171,15 +157,14 @@ export default function EditUserForm() {
               variant="bordered"
               labelPlacement="outside"
               label="  Phone Number  "
-              isInvalid={errors.name && focus.name}
+              isInvalid={errors.phone && focus.phone}
             />
           </div>
 
-          
           <div className={style.formItem}>
-          <Select
+            <Select
               color="light"
-              name="status"
+              name="country"
               // onFocus={focusHandler}
               onChange={selectChange}
               classNames={{
@@ -188,12 +173,10 @@ export default function EditUserForm() {
               variant="bordered"
               labelPlacement="outside"
               label="Country"
-              // isInvalid={errors.phone && focus.phone}
+              isInvalid={errors.country && focus.country}
             >
               {countriesData.map((item) => (
-                <SelectItem key={item.name}>
-                  {item.name}
-                </SelectItem>
+                <SelectItem key={item.name}>{item.name}</SelectItem>
               ))}
             </Select>
           </div>
@@ -201,7 +184,7 @@ export default function EditUserForm() {
             <Input
               color="light"
               type="text"
-              name="adderss"
+              name="city"
               onFocus={focusHandler}
               onChange={changeHandler}
               classNames={{
@@ -217,7 +200,7 @@ export default function EditUserForm() {
             <Input
               color="light"
               type="text"
-              name="adderss"
+              name="address"
               onFocus={focusHandler}
               onChange={changeHandler}
               classNames={{
@@ -230,38 +213,35 @@ export default function EditUserForm() {
             />
           </div>
           <div className=" w-full  flex justify-start ml-[150px] mt-4">
-                  <Checkbox color="success" defaultSelected>
-                    Status
-                  </Checkbox>
-                </div>
-          {/* <div className={style.formItem}>
-          <Select
-              color="light"
-              name="status"
-              // onFocus={focusHandler}
-              onChange={selectChange}
-              classNames={{
-                input: ["text-[14px]"],
-              }}
-              variant="bordered"
-              labelPlacement="outside"
-              label="Status"
-              // isInvalid={errors.phone && focus.phone}
-            >
-              {statusSelect.map((item) => (
-                <SelectItem key={item}>
-                  {item}
-                </SelectItem>
-              ))}
-            </Select>
-          </div> */}
+            <Checkbox color="success" defaultSelected>
+              Status
+            </Checkbox>
+          </div>
         </form>
-       
-        <Stack direction="row" justifyContent="center" alignItems="center" spacing={3} mb={10} mt={10}>
-          <Button variant="solid" className="w-[130px] h-[40px] bg-[#15a380] text-green-50 ml-3"  onClick={submitHandler}>
+
+        <Stack
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          spacing={3}
+          mb={10}
+          mt={10}
+        >
+          <Button
+            variant="solid"
+            className="w-[130px] h-[40px] bg-[#15a380] text-green-50 ml-3"
+            onClick={submitHandler}
+          >
             Edit
           </Button>
-          <Button variant="flat" className="w-[130px] bg-red-500 text-white "  onClick={deleteHandler}> Cancel </Button>
+          <Button
+            variant="flat"
+            className="w-[130px] bg-red-500 text-white "
+            onClick={deleteHandler}
+          >
+            {" "}
+            Cancel{" "}
+          </Button>
         </Stack>
       </div>
     </>
