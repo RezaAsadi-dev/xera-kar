@@ -1,26 +1,33 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import style from "./style.module.scss";
 import Stack from "@mui/material/Stack";
-import { styled } from "@mui/material/styles";
-import { red } from "@mui/material/colors";
-import { green } from "@mui/material/colors";
 import validate from "./validate";
 import { fetchApi } from "api";
 import { Button, Checkbox, Input, Select, SelectItem } from "@nextui-org/react";
 import countriesData from "assets/countries/countries.json";
-
+import { useDispatch } from "react-redux";
+import { handler } from "../../../redux/loaderSlice";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import style1 from "./Styles.module.css";
 export default function EditUserForm() {
-  const addProUrl = "v1/api/admin/agent/add";
+  const edditUserUrl = "api/admin/update";
+  const url = "api/admin/fetch_one";
+  const cityUrl = "api/admin/fetch";
+  const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch1 = useDispatch();
   const [focus, setFocus] = useState({});
   const [errors, setErrors] = useState({});
-  const [statusSelect, setStatusSelect] = useState(["active", "inactive"]);
+  const [statusSelect, setStatusSelect] = useState(["active", "deactive"]);
+  const [countrySelection, setCountrySelection] = useState();
+  const [phone, setPhone] = useState("");
   const [data, setData] = useState({
     name: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
     country: "",
     city: "",
     address: "",
@@ -37,37 +44,71 @@ export default function EditUserForm() {
   }, [data, focus]);
 
   const changeHandler = (e) => {
+    console.log(e.target.name);
+    console.log(e.target.value);
+
     const { name, value } = e.target;
     setData({
+      ...phone,
       ...data,
       [name]: value,
     });
   };
+  const handleOnChange = (value) => {
+    const formattedValue = value ? value.replace(/^\+/, "") : "";
+
+    setPhone(formattedValue);
+  };
 
   const focusHandler = (event) => {
     setFocus({ ...focus, [event.target.name]: true });
-    console.log(event.target.name)
+    console.log(event.target.name);
   };
-
+  const fetchUser = (e) => {
+    dispatch1(handler(true));
+    fetchApi(
+      url,
+      {
+        collaction: "user",
+        id: id,
+      },
+      "post"
+    )
+      .then((res) => {
+        if (res?.status_code === 200) {
+          setData(res?.Data[0]);
+          setPhone(res?.Data[0]?.phoneNumber)
+          
+          
+          dispatch1(handler(false));
+        } else {
+          toast.error("Something went wrong!");
+          dispatch1(handler(false));
+        }
+      })
+      .catch(() => {
+        toast.error("Failed to fetch user data.");
+        dispatch1(handler(false));
+      });
+  };
 
   const submitHandler = (event) => {
     event.preventDefault();
     if (!Object.keys(errors).length) {
-      console.log(data);
-
       fetchApi(
-        addProUrl,
+        edditUserUrl,
         {
+          collaction: "user",
+          id: id,
           name: data.name,
           email: data.email,
-          phone: data.phone,
+          phoneNumber: phone,
           country: data.country,
           city: data.city,
           address: data.address,
-          dateTime: data.dateTime,
           status: data.status,
         },
-        "post"
+        "put"
       ).then((res) => {
         //(res);
         if (res.status_code === 200) {
@@ -85,7 +126,7 @@ export default function EditUserForm() {
       setFocus({
         name: true,
         email: true,
-        phone: true,
+        phoneNumber: true,
         country: true,
         city: true,
         address: true,
@@ -94,16 +135,35 @@ export default function EditUserForm() {
       });
     }
   };
-  const selectChange = (value) => {
+  const selectChange = (e) => {
     setData({
       ...data,
-      country: value,  // Set the selected country here
+      country: e.target.value,
     });
   };
 
+  const countrySelect = (name) => {
+    fetchApi(cityUrl, { collaction: "city", query: { country: name }, page: "all" }, "post").then(
+      (res) => {
+        if (res?.status_code === 200) {
+          dispatch1(handler(false));
+          console.log(res);
+          setCountrySelection(res?.data);
+          // setData(res?.data);
+          // setnumber(res?.count);
+          // setTotalPages(res?.max_page);
+        } else {
+          dispatch1(handler(false));
+          toast.error("  Something went wrong!");
+        }
+      }
+    );
+    // console.log(name);
+  };
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    fetchUser();
+  }, []);
+
   return (
     <>
       <div className={style.addContainer}>
@@ -114,6 +174,7 @@ export default function EditUserForm() {
           </div> */}
           <div className={style.formItem}>
             <Input
+              value={data?.name}
               color="light"
               type="text"
               name="name"
@@ -130,6 +191,7 @@ export default function EditUserForm() {
           </div>
           <div className={style.formItem}>
             <Input
+              value={data?.email}
               color="light"
               type="email"
               name="email"
@@ -144,11 +206,30 @@ export default function EditUserForm() {
               label="Email address"
             />
           </div>
-          <div className={style.formItem}>
+          <div className={`${style.formItem} h-full flex flex-col justify-end`}>
+            <div className={` h-10 border-2  rounded-lg   `}>
+              <PhoneInput
+                international
+                type="text"
+                // name="phoneNumber"
+                defaultCountry="US"
+                value={data?.phoneNumber}
+                onChange={handleOnChange}
+                limitMaxLength
+                className={`${style1.phoneInput} !outline-none`}
+                placeholder="Enter phone number"
+              />
+              {/* {phone === "" && (
+                <span className={style1.error}>Please enter a valid phone number</span>
+              )} */}
+            </div>
+          </div>
+          {/* <div className={style.formItem}>
             <Input
+              value={data?.phoneNumber}
               color="light"
               type="number"
-              name="phone"
+              name="phoneNumber"
               onFocus={focusHandler}
               onChange={changeHandler}
               classNames={{
@@ -157,16 +238,18 @@ export default function EditUserForm() {
               variant="bordered"
               labelPlacement="outside"
               label="  Phone Number  "
-              isInvalid={errors.phone && focus.phone}
+              isInvalid={errors.phoneNumber && focus.phoneNumber}
             />
-          </div>
+          </div> */}
 
           <div className={style.formItem}>
             <Select
+              selectedKeys={[data?.country]}
+              value={data?.country}
               color="light"
               name="country"
-              // onFocus={focusHandler}
-              onChange={selectChange}
+              onFocus={focusHandler}
+              onChange={changeHandler}
               classNames={{
                 input: ["text-[14px]"],
               }}
@@ -176,14 +259,22 @@ export default function EditUserForm() {
               isInvalid={errors.country && focus.country}
             >
               {countriesData.map((item) => (
-                <SelectItem key={item.name}>{item.name}</SelectItem>
+                <SelectItem
+                  key={item.name}
+                  onClick={() => {
+                    countrySelect(item.name);
+                  }}
+                  //  value={item.name}
+                >
+                  {item.name}
+                </SelectItem>
               ))}
             </Select>
           </div>
           <div className={style.formItem}>
-            <Input
+            <Select
+              value={data?.city}
               color="light"
-              type="text"
               name="city"
               onFocus={focusHandler}
               onChange={changeHandler}
@@ -194,10 +285,15 @@ export default function EditUserForm() {
               labelPlacement="outside"
               label=" City "
               isInvalid={errors.city && focus.city}
-            />
+            >
+              {countrySelection?.map((item) => (
+                <SelectItem key={item?.city}>{item?.city}</SelectItem>
+              ))}
+            </Select>
           </div>
           <div className={style.formItem}>
             <Input
+              value={data?.address}
               color="light"
               type="text"
               name="address"
@@ -213,7 +309,19 @@ export default function EditUserForm() {
             />
           </div>
           <div className=" w-full  flex justify-start ml-[150px] mt-4">
-            <Checkbox color="success" defaultSelected>
+            <Checkbox
+              name="status"
+              onChange={(e) => {
+                changeHandler({
+                  target: {
+                    name: "status",
+                    value: e.target.checked,
+                  },
+                });
+              }}
+              color="success"
+              isSelected={data.status}
+            >
               Status
             </Checkbox>
           </div>

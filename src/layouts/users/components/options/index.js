@@ -7,14 +7,11 @@ import MenuItem from "@mui/material/MenuItem";
 import EditIcon from "@mui/icons-material/Edit";
 import { GrSettingsOption } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
-import { FiTrash2 } from "react-icons/fi";
 import accessPage from "helper/functios";
 import toast from "react-hot-toast";
 import { VscCompassActive } from "react-icons/vsc";
 import { FiInfo } from "react-icons/fi";
 import { fetchApi } from "api";
-
-
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -53,24 +50,28 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function Options({ openModal, refetch, onClick, phoneNumber, userId, status }) {
-
+export default function Options({ openModal, refetch, id: userId, status }) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
-
   const open = Boolean(anchorEl);
+  const disableUserUrl = "api/admin/update";
+
   const handleClick = (event, type, id) => {
     setAnchorEl(event.currentTarget);
-    if (type === "detail") {
-      navigate(`/users/usersDetails/${id}`);
-    } else if (type === "edit") {
+    if (type === "edit") {
       navigate(`/users/editUser/${id}`);
+    } else if (type === "disable") {
+      const result = openHandler("disable");
+      if (result) {
+        openModal(true);
+        setAnchorEl(null);
+        submit();
       }
-      else if (type==="status"){
-        submit()
-      }
+    } else if (type === "detail") {
+      navigate(`/users/usersDetails/${id}`);
     }
-  
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -79,21 +80,21 @@ export default function Options({ openModal, refetch, onClick, phoneNumber, user
     if (accessPage("Users", type)) {
       toast.error(" inaccesibility ");
       handleClose();
-      return false
-    }
-    else return true
+      return false;
+    } else return true;
   };
   const submit = () => {
-    fetchApi(disableUserUrl, { id: userId , userId, status:  !status }, "put").then((res) => {
+    fetchApi(
+      disableUserUrl,
+      { collaction: "user", id: userId, userId, status: !status },
+      "put"
+    ).then((res) => {
       if (res?.status_code === 200) {
-        if (status){
+        if (status) {
           toast.success(" User deactivated successfully! ");
-      
-      }
-      else {
-                toast.success(" User activated successfully! ");
-
-      }
+        } else {
+          toast.success(" User activated successfully! ");
+        }
 
         refetch();
       } else {
@@ -131,8 +132,8 @@ export default function Options({ openModal, refetch, onClick, phoneNumber, user
           }}
           disableRipple
         >
-          <FiInfo  className="mr-[12px]"  />
-         Detail
+          <FiInfo className="mr-[12px]" />
+          Detail
         </MenuItem>
         <MenuItem
           onClick={(e) => {
@@ -142,19 +143,18 @@ export default function Options({ openModal, refetch, onClick, phoneNumber, user
           disableRipple
         >
           <EditIcon />
-         Edit
+          Edit
         </MenuItem>
         <MenuItem
           onClick={(e) => {
             handleClose();
-            handleClick(e, "status");
+            handleClick(e, "disable");
           }}
           disableRipple
         >
-          <VscCompassActive className="mr-[12px]"  />
-          {status ? " Activate " : " Deactivate "}
+          <VscCompassActive className="mr-[12px]" />
+          {status ? " Deactivate " : " Activate "}
         </MenuItem>
-       
       </StyledMenu>
     </>
   );

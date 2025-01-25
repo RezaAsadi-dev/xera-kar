@@ -11,16 +11,15 @@ import Options from "./component/options";
 import { fetchApi } from "api";
 import { useDispatch } from "react-redux";
 import { handler } from "../../redux/loaderSlice";
-// import toast from "react-hot-toast";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Lotties from "layouts/noData/Lotties";
 import LengthNumber from "components/lengthNumber";
 
 function Managers() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const managersUrl = "v1/api/admin/operator/fetch";
+  const managersUrl = "api/admin/fetch";
   const [data, setData] = useState([]);
   const [delID, setDelID] = useState(null);
   const [modals, setModals] = useState({
@@ -36,7 +35,15 @@ function Managers() {
 
   const fetchData = () => {
     dispatch(handler(true));
-    fetchApi(managersUrl).then((res) => {
+    fetchApi(
+      managersUrl,
+      {
+        collaction: "admin",
+        query: { type: "operator" },
+        page: 1,
+      },
+      "post"
+    ).then((res) => {
       dispatch(handler(false));
       if (res.status_code === 200) {
         setData(res);
@@ -46,7 +53,6 @@ function Managers() {
     });
   };
 
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -55,10 +61,10 @@ function Managers() {
     <div className="flex flex-col min-h-screen">
       <DashboardLayout>
         <DashboardNavbar />
-  
-        <SoftBox py={3} className="flex-grow"> {/* This allows the content to grow */}
+
+        <SoftBox py={3} className="flex-grow">
           <SoftBox mb={3}>
-            <Card style={{minHeight:"700px"}} >
+            <Card style={{ minHeight: "700px" }}>
               <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
                 <LengthNumber title=" Managers: " number={data?.count} />
                 <SoftButton
@@ -68,11 +74,11 @@ function Managers() {
                   className="left-4 text-xs"
                   onClick={() => navigate("/managers/addManagers")}
                 >
-                  Add manager 
+                  Add manager
                 </SoftButton>
               </SoftBox>
-              <SoftBox 
-              style={{overflow: "auto"}}
+              <SoftBox
+                style={{ overflow: "auto" }}
                 sx={{
                   "& .MuiTableRow-root:not(:last-child)": {
                     "& td": {
@@ -88,20 +94,20 @@ function Managers() {
                       <tr>
                         <th>row</th>
                         <th> User Name </th>
-                        <th> Email  </th>
+                        <th> Email </th>
                         <th> Phone number </th>
                         <th>Operations</th>
                       </tr>
                     </thead>
                     <tbody>
                       {data?.data?.map((item, index) => (
-                        <tr key={item._id}>
+                        <tr key={item?._id}>
                           <td>{index + 1}</td>
-                          <td>{item.user}</td>
-                          <td>{item.email?item.email:"-"}</td>
-                          <td>{item.phone}</td>
+                          <td>{item?.user}</td>
+                          <td>{item?.email ? item?.email : "--------"}</td>
+                          <td>{item?.phoneNumber ? item?.phoneNumber : "--------"}</td>
                           <td>
-                            <Options id={item._id} openModal={() => handleChange(item._id)} />
+                            <Options id={item?._id} openModal={() => handleChange(item?._id)} />
                           </td>
                         </tr>
                       ))}
@@ -114,7 +120,7 @@ function Managers() {
             </Card>
           </SoftBox>
         </SoftBox>
-  
+
         {modals.delete && (
           <DeleteModal
             closeModal={() => setModals({ ...modals, delete: false })}
@@ -122,8 +128,7 @@ function Managers() {
             id={delID}
           />
         )}
-  
-        {/* Footer Card */}
+
         <div className="mt-auto">
           <Card className="p-[15px]">
             <div className="sm:text-[14px] gap-5 text-[12px] text-gray-400 flex justify-between">
@@ -136,8 +141,6 @@ function Managers() {
       </DashboardLayout>
     </div>
   );
-  
-
 }
 
 export default Managers;

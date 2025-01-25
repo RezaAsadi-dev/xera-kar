@@ -15,7 +15,7 @@ function EditUser() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (accessPage("users", "add")) {
+    if (accessPage("users", "edit")) {
       navigate("/inaccessibility");
     }
   }, []);

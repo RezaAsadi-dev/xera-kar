@@ -16,21 +16,22 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 function CategoryDetails() {
   const navigate = useNavigate();
   const dispatch1 = useDispatch();
-  const url = "v1/api/admin/user/fetch_one";
+  const url = "api/admin/fetch_one";
   const { id } = useParams();
+  const [currentPage, setCurrentPage] = useState(1);
   const [allData, setAllData] = useState([]);
-   const [modals, setModals] = useState({
+  const [modals, setModals] = useState({
     edit: false,
   });
 
-  const fetchUser = () => {
+  const fetchCategory = () => {
     dispatch1(handler(true));
-    fetchApi(url, { id: id }, "post").then((res) => {
+    fetchApi(url, { collaction: "cat", id, page: currentPage }, "post").then((res) => {
       if (res?.status_code === 200) {
+        console.log(res?.Data[0]);
         dispatch1(handler(false));
- 
-        setAllData(res?.data);
- 
+
+        setAllData(res?.Data[0]);
       } else {
         dispatch1(handler(false));
         toast.error("Something went wrong!");
@@ -38,8 +39,7 @@ function CategoryDetails() {
     });
   };
   useEffect(() => {
-    fetchUser();
-    console.log(allData)
+    fetchCategory();
     if (accessPage("Users")) {
       navigate("/inaccessibility");
     }
@@ -47,21 +47,15 @@ function CategoryDetails() {
 
   return (
     <DashboardLayout>
-      {/* <Header info={allData} allModal={modals} modal={setModals} /> */}
       <DashboardNavbar />
-
       <SoftBox mt={2} mb={3}>
-        <Grid  spacing={3}>
+        <Grid spacing={3}>
           <Grid item xs={12} md={6} xl={4}>
-            <Infos title="Category details " info={allData} />
+            <Infos title="Category details " info={allData} fetchData={fetchCategory} />
           </Grid>
-          {/* <Grid item xs={12} md={6} xl={4}>
-            <Transactions info={allData && allData}/>
-          </Grid> */}
-        
         </Grid>
       </SoftBox>
-      
+
       {modals.edit && (
         <EditModal
           closeModal={() => setModals((prev) => ({ ...prev, edit: false }))}
@@ -70,7 +64,6 @@ function CategoryDetails() {
           id={id}
         />
       )}
-
     </DashboardLayout>
   );
 }

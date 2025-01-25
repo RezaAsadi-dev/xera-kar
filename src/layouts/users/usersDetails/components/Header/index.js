@@ -110,8 +110,7 @@ function Header({ info, modal, allModal }) {
                 <SoftBox key={index} height="100%" mt={0.5} lineHeight={1}>
                   <SoftTypography variant="h5" fontWeight="medium">
                     {`
-                  ${item?.fName}
-                  ${item?.lName}
+                  ${item?.name}
                   `}
                   </SoftTypography>
                   <SoftTypography variant="button" color="text" fontWeight="medium">

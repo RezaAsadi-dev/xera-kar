@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import style from "./style.module.scss";
 import Stack from "@mui/material/Stack";
 import validate from "./validate";
@@ -11,16 +11,13 @@ import animationData from "assets/animation/Animation.json";
 import Lottie from "react-lottie-player";
 
 export default function EditCityForm() {
-  const addProUrl = "v1/api/admin/agent/add";
+  const EditCityUrl = "api/admin/fetch_one";
+  const updateCityUrl = "api/admin/update";
+  const { id } = useParams();
   const navigate = useNavigate();
   const [focus, setFocus] = useState({});
-  const [statusSelect, setStatusSelect] = useState(["active", "inactive"]);
   const [errors, setErrors] = useState({});
-  const [data, setData] = useState({
-    city: "",
-    country: "",
-    status: "",
-  });
+  const [data, setData] = useState({});
 
   const deleteHandler = () => {
     navigate("/city", { replace: true });
@@ -42,22 +39,26 @@ export default function EditCityForm() {
   const focusHandler = (event) => {
     setFocus({ ...focus, [event.target.name]: true });
   };
+  const EditCityUrlHandler = () => {
+    fetchApi(EditCityUrl, { collaction: "city", id: id }, "post").then((res) => {
+      setData(res?.Data[0]);
+    });
+  };
 
   const submitHandler = (event) => {
     event.preventDefault();
-    if (!Object.keys(errors).length) {
-      console.log(data);
-
+    if (!!Object.keys(errors).length) {
       fetchApi(
-        addProUrl,
+        updateCityUrl,
         {
           city: data.name,
-          country: data.userName,
+          country: data.country,
           status: data.status,
+          collaction: "city",
+          id: id,
         },
-        "post"
+        "put"
       ).then((res) => {
-        //(res);
         if (res.status_code === 200) {
           toast.success(" City edited successfully! ");
           navigate("/city");
@@ -77,12 +78,10 @@ export default function EditCityForm() {
       });
     }
   };
-  const selectChange = (e) => {
-    console.log(e.target.value);
-  };
+
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    EditCityUrlHandler();
+  }, []);
   return (
     <>
       <div className={style.addContainer}>
@@ -92,7 +91,8 @@ export default function EditCityForm() {
               <Input
                 color="light"
                 type="text"
-                name="name"
+                name="city"
+                value={data?.city}
                 onFocus={focusHandler}
                 onChange={changeHandler}
                 classNames={{
@@ -107,16 +107,15 @@ export default function EditCityForm() {
             <div className={style.formItem}>
               <Select
                 color="light"
-                name="Country"
-                // onFocus={focusHandler}
-                onChange={(e) => selectChange(e)}
+                name="country"
+                selectedKeys={[data?.country]}
+                onChange={changeHandler}
                 classNames={{
                   input: ["text-[14px]"],
                 }}
                 variant="bordered"
                 labelPlacement="outside"
                 label="Country"
-                // isInvalid={errors.phone && focus.phone}
               >
                 {db.map((item) => (
                   <SelectItem key={item.name}>{item.name}</SelectItem>
@@ -126,20 +125,25 @@ export default function EditCityForm() {
             <div className={style.formItem}>
               <Select
                 color="light"
-                name="Status"
-                // onFocus={focusHandler}
-                onChange={(e) => selectChange(e)}
+                name="status"
+                selectedKeys={[String(data?.status) ?? "false"]}
+                onChange={changeHandler}
                 classNames={{
                   input: ["text-[14px]"],
                 }}
                 variant="bordered"
                 labelPlacement="outside"
                 label="Status"
-                // isInvalid={errors.phone && focus.phone}
+                items={[
+                  { key: "true", label: "Active" },
+                  { key: "false", label: "Inactive" },
+                ]}
               >
-                {statusSelect.map((item) => (
-                  <SelectItem key={item}>{item}</SelectItem>
-                ))}
+                {(item) => (
+                  <SelectItem key={item.key} value={item.key}>
+                    {item.label}
+                  </SelectItem>
+                )}
               </Select>
             </div>
           </div>
@@ -166,8 +170,7 @@ export default function EditCityForm() {
             className="w-[130px] bg-red-500 text-white "
             onClick={deleteHandler}
           >
-            {" "}
-            Cancel{" "}
+            Cancel
           </Button>
         </Stack>
       </div>

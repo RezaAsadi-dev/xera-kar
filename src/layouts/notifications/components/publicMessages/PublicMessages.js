@@ -12,7 +12,6 @@ const[page,setPage]=useState(1);
 useEffect(()=>{
   setPages({...pages,private:page})
   },[page,location])
-
   return (
     <div className="pt-6">
         <TableC tHeads={['Row','Title','Text','Date']} isLoading = {loading}>

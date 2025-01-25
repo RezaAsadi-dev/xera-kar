@@ -10,12 +10,17 @@ import burceMars from "assets/images/logo.jpg";
 import curved0 from "assets/images/curved-images/curved0.jpg";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { Button } from "@nextui-org/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 function Header({ info }) {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
-
+  const {id}=useParams()
+  const navigate=useNavigate()
+  const editNavigation =()=>{
+    
+    navigate(`/business/editbusiness/${id}`)
+  }
   useEffect(() => {
     // A function that sets the orientation state of the tabs.
     function handleTabsOrientation() {
@@ -70,7 +75,7 @@ function Header({ info }) {
           <Grid container spacing={3} alignItems="center">
             <Grid item>
               <SoftAvatar
-                src={burceMars}
+                src={info[0]?.img}
                 alt="profile-image"
                 variant="rounded"
                 size="xl"
@@ -81,22 +86,26 @@ function Header({ info }) {
               <SoftBox height="100%" mt={0.5} lineHeight={1}>
                 <SoftTypography variant="h5" fontWeight="medium">
                   {`
-                  ${info?.name}
+                  ${info[0]?.name}
                   `}
                 </SoftTypography>
                 <SoftTypography variant="button" color="text" fontWeight="medium">
-                  {info?.phone}
+                  {info[0]?.phone}
                 </SoftTypography>
               </SoftBox>
             </Grid>
           </Grid>
-          <Button color="primary" className=" flexitems-center text-[13px] h-[36px] w-[130px] mb-1" variant="ghost">
-              <Link to="/business/editbusiness/:id" 
-                    className="flex items-center space-x-2"
->
-              Edit  <LiaUserEditSolid size={20} />
-              </Link>
-            </Button>
+          <Button
+           onClick={editNavigation}
+            color="primary"
+            className=" flexitems-center text-[13px] h-[36px] w-[130px] mb-1"
+            variant="ghost"
+          >
+            {/* <Link to="/business/editbusiness/:id" className="flex items-center space-x-2">
+            
+            </Link> */}
+            Edit <LiaUserEditSolid size={20} />
+          </Button>
         </Grid>
       </Card>
     </SoftBox>

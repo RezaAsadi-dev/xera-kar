@@ -12,7 +12,6 @@ import toast from "react-hot-toast";
 import { VscCompassActive } from "react-icons/vsc";
 import { FiInfo } from "react-icons/fi";
 
-
 const StyledMenu = styled((props) => (
   <Menu
     elevation={0}
@@ -50,8 +49,7 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function Options({ phoneNumber,lName,fName, userId, status }) {
-
+export default function Options({ phoneNumber, lName, fName, userId, status }) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -62,9 +60,9 @@ export default function Options({ phoneNumber,lName,fName, userId, status }) {
       navigate(`/category/categoryDetails/${id}`);
     } else if (type === "edit") {
       navigate(`/category/editCategory/${id}`);
-      }
     }
-  
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -73,17 +71,16 @@ export default function Options({ phoneNumber,lName,fName, userId, status }) {
     if (accessPage(" category ", type)) {
       toast.error(" inaccesibility ");
       handleClose();
-      return false
-    }
-    else return true
+      return false;
+    } else return true;
   };
   const submit = () => {
-    fetchApi(disableOrganUrl, { id, status: !status}, "put").then((res) => {
+    fetchApi(disableOrganUrl, { id, status: !status }, "put").then((res) => {
       if (res?.status_code === 200) {
         if (status) {
-          toast.success(" User deactivated successfully! ");
+          toast.success(" Category deactivated successfully! ");
         } else {
-          toast.success(" User activated successfully! ");
+          toast.success(" Category activated successfully! ");
         }
 
         refetch();

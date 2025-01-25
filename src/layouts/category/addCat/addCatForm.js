@@ -9,7 +9,7 @@ import { Button, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
 import FileUploader from "components/fileuploader/uploader";
 
 export default function AddCatForm() {
-  const addCatUrl = "v1/api/admin/agent/add";
+  const addCatUrl = "api/admin/add";
   const navigate = useNavigate();
   const [focus, setFocus] = useState({});
   const [errors, setErrors] = useState({});
@@ -33,6 +33,9 @@ export default function AddCatForm() {
   //   }, [data, focus]);
 
   const changeHandler = (e) => {
+    console.log(e.target.name);
+    console.log(e.target.value);
+    
     const { name, value } = e.target;
     setData({
       ...data,
@@ -53,9 +56,10 @@ export default function AddCatForm() {
         addCatUrl,
         {
           title: data.title,
-          descriprion: data.description,
+          description: data.description,
           status: data.status,
           img: data.img,
+          collaction:"cat"
         },
         "post"
       ).then((res) => {
@@ -112,7 +116,7 @@ export default function AddCatForm() {
                 variant="bordered"
                 labelPlacement="outside"
                 label=" Title "
-                isInvalid={errors.username && focus.username}
+                isInvalid={errors.title && focus.title}
               />
             </div>
             <div className={style.formItem}>
@@ -120,7 +124,7 @@ export default function AddCatForm() {
                 color="light"
                 name="status"
                 // onFocus={focusHandler}
-                onChange={(e) => selectChange(e)}
+                onChange={changeHandler}
                 classNames={{
                   input: ["text-[14px]"],
                 }}
@@ -139,6 +143,8 @@ export default function AddCatForm() {
             <div className="mt-4">
               <Textarea
                 variant="bordered"
+                onChange={changeHandler}
+                name="description"
                 label="Description"
                 labelPlacement="outside"
                 placeholder="Enter your description"
@@ -147,7 +153,7 @@ export default function AddCatForm() {
             </div>
             </div>
           <div className=" md:w-1/2 relative">
-            <FileUploader />
+            <FileUploader data={data} setData={setData} />
           </div>
         </form>
 

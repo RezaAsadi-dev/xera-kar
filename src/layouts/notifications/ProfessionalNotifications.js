@@ -20,7 +20,6 @@ import accessPage from "helper/functios";
 import toast from "react-hot-toast";
 import { debounce } from "lodash";
 
-
 const ProNotif = () => {
   const tabData = [
     {
@@ -36,7 +35,7 @@ const ProNotif = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const tificationUrl = "v1/api/admin/notification/fetch";
+  const tificationUrl = "api/admin/fetch";
   const location = useLocation();
   const [totalPages, setTotalPages] = useState();
   const [currentPage, setCurrentPage] = useState(1);
@@ -60,7 +59,7 @@ const ProNotif = () => {
     setLoading({ ...loading, public: true });
     fetchApi(
       tificationUrl,
-      { query: { type: "general", target }, page: pages.public },
+      { collaction: "notification", query: { type: "general", target }, page: pages.public },
       "post"
     ).then((res) => {
       if (res.status_code === 200) {
@@ -85,7 +84,7 @@ const ProNotif = () => {
 
     fetchApi(
       tificationUrl,
-      { query: { type: "private", target }, page: pages.private },
+      { collaction: "notification", query: { type: "private", target }, page: pages.private },
       "post"
     ).then((res) => {
       if (res.status_code === 200) {
@@ -113,11 +112,10 @@ const ProNotif = () => {
 
   const target = location.pathname.split("/")[2];
 
-
   const handlePageChange = debounce((pageNumber) => {
     setCurrentPage(pageNumber);
   }, 300);
-  
+
   useEffect(() => {
     if (selected === "0") {
       fetchPublicNotification();

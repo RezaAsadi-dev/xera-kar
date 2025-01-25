@@ -16,10 +16,10 @@ import EditModal from "./components/editModal";
 function RequestDetail() {
   const navigate = useNavigate();
   const dispatch1 = useDispatch();
-  const url = "v1/api/admin/user/fetch_one";
+  const url = "api/admin/fetch_one";
   const { id } = useParams();
   const [allData, setAllData] = useState([]);
-   const [modals, setModals] = useState({
+  const [modals, setModals] = useState({
     edit: false,
     chooseRepresentative: false,
     chooseConsultant: false,
@@ -27,12 +27,10 @@ function RequestDetail() {
 
   const fetchUser = () => {
     dispatch1(handler(true));
-    fetchApi(url, { id: id }, "post").then((res) => {
+    fetchApi(url, { collaction: "request", id: id }, "post").then((res) => {
       if (res?.status_code === 200) {
         dispatch1(handler(false));
- 
-        setAllData(res?.data);
- 
+        setAllData(res?.Data);
       } else {
         dispatch1(handler(false));
         toast.error("Something went wrong!");
@@ -41,7 +39,6 @@ function RequestDetail() {
   };
   useEffect(() => {
     fetchUser();
-    console.log(allData)
     if (accessPage("Users")) {
       navigate("/inaccessibility");
     }
@@ -49,21 +46,16 @@ function RequestDetail() {
 
   return (
     <DashboardLayout>
-      {/* <Header info={allData} allModal={modals} modal={setModals} /> */}
       <DashboardNavbar />
 
       <SoftBox mt={2} mb={3}>
-        <Grid  spacing={3}>
+        <Grid spacing={3}>
           <Grid item xs={12} md={6} xl={4}>
             <Infos title="Category details " info={allData} />
           </Grid>
-          {/* <Grid item xs={12} md={6} xl={4}>
-            <Transactions info={allData && allData}/>
-          </Grid> */}
-        
         </Grid>
       </SoftBox>
-      
+
       {modals.edit && (
         <EditModal
           closeModal={() => setModals((prev) => ({ ...prev, edit: false }))}
@@ -72,7 +64,6 @@ function RequestDetail() {
           id={id}
         />
       )}
-
     </DashboardLayout>
   );
 }

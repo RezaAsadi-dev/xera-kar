@@ -5,10 +5,11 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 
 import "./fileUploader.css";
 import { fetchApi } from "api";
+import toast from "react-hot-toast";
 
-const FileUploader = ({ onChange }) => {
+const FileUploader = ({ onChange,data,setData }) => {
   const [previewImage, setPreviewImage] = useState(null);
-  const url = "api/user/home/uploader";
+  const url = "image/uploader";
 
   const handleFileChange = async (e) => {
     const file = await e.target.files[0];
@@ -19,7 +20,19 @@ const FileUploader = ({ onChange }) => {
     setPreviewImage(URL.createObjectURL(file));
 
     // API call to upload the file
-    await fetchApi(url, { file: file }, "post-imgUpload").then((res) => console.log(res));
+    await fetchApi(url, { file: file }, "post-imgUpload").then((res) =>
+    {
+      if(res.status_code===200){
+        setData((prevData) => ({
+          ...prevData,
+          img: res.link,
+        }))
+      }else if (res.status_code === 401 && res.description === "unauthorized") {
+        navigate("/login", { replace: true });
+      } else {
+        toast.error("problem");
+      }
+    });
   };
   const handleDeleteImage = () => {
     setPreviewImage(null);

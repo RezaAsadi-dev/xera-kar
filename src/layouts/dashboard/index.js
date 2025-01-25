@@ -23,7 +23,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 function Dashboard() {
   const dispatch = useDispatch();
-  const dashboardUrl = "v1/api/admin/dashboard/fetch_dashboard";
+  const dashboardUrl = "api/admin/dashboard";
   // dispatch(handler(true));
 
   const { size } = typography;
@@ -62,8 +62,8 @@ function Dashboard() {
       },
       "post"
     ).then((res) => {
-      if (res.status_code === 200) {
-        setDashboardData(res.Data);
+      if (res) {
+        setDashboardData(res);
       } else if (res.status_code === 401 && res.description === "unauthorized") {
         navigate("/login", { replace: true });
       } else {
@@ -75,13 +75,16 @@ function Dashboard() {
 
   useEffect(() => {
     if (timeRange) {
-      fetchData(timeRange); // Fetch data whenever `timeRange` changes
+      fetchData(timeRange);
     }
 
     if (accessPage("Dashboard")) {
-      navigate("/inaccessibility"); // Redirect if user has no access
+      navigate("/inaccessibility");
     }
   }, [timeRange, Type]);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <DashboardLayout
@@ -109,7 +112,7 @@ function Dashboard() {
               <MiniStatisticsCard
                 className="dashboardIcon"
                 title={{ text: " # managers " }}
-                count={Number(dashboardData.adminCount).toLocaleString()}
+                count={Number(dashboardData.operatorCount).toLocaleString()}
                 percentage={{ color: "success", text: "manager" }}
                 icon={{ color: "info", component: "person" }}
                 style={{ minHeight: "120px" }}
@@ -148,7 +151,7 @@ function Dashboard() {
               <MiniStatisticsCard
                 className="dashboardIcon"
                 title={{ text: "#professionals" }}
-                count={Number(dashboardData.orderCount).toLocaleString()}
+                count={Number(dashboardData.PROFESSIONALSCount).toLocaleString()}
                 percentage={{ color: "success", text: " pros" }}
                 icon={{ color: "info", component: "manage_accounts_icon" }}
                 style={{ minHeight: "120px" }}
@@ -167,7 +170,7 @@ function Dashboard() {
               <MiniStatisticsCard
                 className="dashboardIcon"
                 title={{ text: " # category " }}
-                count={Number(dashboardData.paymeantCount).toLocaleString()}
+                count={Number(dashboardData.catCount).toLocaleString()}
                 percentage={{ color: "success", text: "categories" }}
                 icon={{ color: "info", component: "category_icon" }}
                 style={{ minHeight: "120px" }}
@@ -205,7 +208,7 @@ function Dashboard() {
               <MiniStatisticsCard
                 className="dashboardIcon"
                 title={{ text: " # comments " }}
-                count={Number(dashboardData.ticketCount).toLocaleString()}
+                count={Number(dashboardData.commentCount).toLocaleString()}
                 percentage={{ color: "success", text: "comments" }}
                 icon={{ color: "info", component: "mark_chat_unread_icon" }}
                 style={{ minHeight: "120px" }}

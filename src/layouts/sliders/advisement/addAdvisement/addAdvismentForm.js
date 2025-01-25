@@ -9,7 +9,7 @@ import { Button, Input } from "@nextui-org/react";
 import FileUploader from "components/fileuploader/uploader";
 
 export default function AddAdvisementForm() {
-  const addProUrl = "v1/api/admin/agent/add";
+  const addAdvismentUrl = "api/admin/add";
   const navigate = useNavigate();
   const [focus, setFocus] = useState({});
   const [errors, setErrors] = useState({});
@@ -23,7 +23,7 @@ export default function AddAdvisementForm() {
     navigate("/slider/advisement", { replace: true });
   };
 
-  const changeHandler = (e) => {
+  const changeHandler = (e) => { 
     const { name, value } = e.target;
 
     setData({
@@ -43,11 +43,13 @@ export default function AddAdvisementForm() {
       console.log(data);
 
       fetchApi(
-        addProUrl,
+        addAdvismentUrl,
         {
-          title: data.userName,
-          link: data.name,
-          img: data.email,
+          title: data.title,
+          link: data.link,
+          img: data.img,
+          collaction:"adv",
+          type:"advisement"
         },
         "post"
       ).then((res) => {
@@ -93,14 +95,14 @@ export default function AddAdvisementForm() {
                 variant="bordered"
                 labelPlacement="outside"
                 label="Title"
-                isInvalid={errors.username && focus.username}
+                isInvalid={errors.title && focus.title}
               />
             </div>
             <div className={style.formItem}>
               <Input
                 color="light"
                 type="text"
-                name="name"
+                name="link"
                 onFocus={focusHandler}
                 onChange={changeHandler}
                 classNames={{
@@ -109,12 +111,12 @@ export default function AddAdvisementForm() {
                 variant="bordered"
                 labelPlacement="outside"
                 label=" Link "
-                isInvalid={errors.name && focus.name}
+                isInvalid={errors.link && focus.link}
               />
             </div>
           </div>
           <div className={`w-1/3 relative `}>
-            <FileUploader />
+            <FileUploader data={data} setData={setData} />
           </div>
         </form>
         <Stack

@@ -18,7 +18,7 @@ import Header from "./components/Header";
 function ProDetails() {
   const navigate = useNavigate();
   const dispatch1 = useDispatch();
-  const url = "v1/api/admin/user/fetch_one";
+  const professionalUrl = "/api/admin/fetch_one";
   const { id } = useParams();
   const [allData, setAllData] = useState([]);
   const [modals, setModals] = useState({
@@ -27,26 +27,31 @@ function ProDetails() {
     chooseConsultant: false,
   });
 
-  const fetchUser = () => {
+  const [data, setData] = useState({});
+  const getpro = () => {
+    
+    
     dispatch1(handler(true));
-    fetchApi(url, { id: id }, "post").then((res) => {
+    fetchApi(professionalUrl, { collaction: "company", id }, "post").then((res) => {
       if (res?.status_code === 200) {
         dispatch1(handler(false));
+        console.log(res);
 
-        setAllData(res?.data);
+        setAllData(res?.Data);
+
+        // setnumber(res?.count);
+        // setTotalPages(res?.max_page);
       } else {
         dispatch1(handler(false));
-        toast.error("Something went wrong!");
+        toast.error("  Something went wrong!");
       }
     });
-  };
+  }
+  // console.log(allData);
+  
   useEffect(() => {
-    fetchUser();
-    console.log(allData);
-    if (accessPage("Professioanls")) {
-      navigate("/inaccessibility");
-    }
-  }, []);
+    getpro()
+  }, [])
 
   return (
     <DashboardLayout>

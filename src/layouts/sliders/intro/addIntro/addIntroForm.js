@@ -9,7 +9,7 @@ import { Button, Input, Textarea } from "@nextui-org/react";
 import FileUploader from "components/fileuploader/uploader";
 
 export default function AddIntroForm() {
-  const addProUrl = "v1/api/admin/agent/add";
+  const addIntroUrl = "api/admin/add";
   const navigate = useNavigate();
   const [focus, setFocus] = useState({});
   const [errors, setErrors] = useState({});
@@ -42,11 +42,13 @@ export default function AddIntroForm() {
       console.log(data);
 
       fetchApi(
-        addProUrl,
+        addIntroUrl,
         {
-          username: data.username,
-          link: data.link,
+          title: data.title,
+          img: data.img,
           Description: data.Description,
+          collaction:"adv",
+          type:"intro"
         },
         "post"
       ).then((res) => {
@@ -83,7 +85,7 @@ export default function AddIntroForm() {
               <Input
                 color="light"
                 type="text"
-                name="username"
+                name="title"
                 onFocus={focusHandler}
                 onChange={changeHandler}
                 classNames={{
@@ -92,21 +94,23 @@ export default function AddIntroForm() {
                 variant="bordered"
                 labelPlacement="outside"
                 label=" Title  "
-                isInvalid={errors.username && focus.username}
+                isInvalid={errors.title && focus.title}
               />
             </div>
             <div className="mt-4">
           <Textarea
             variant="bordered"
             label="Description"
+            name="Description"
             labelPlacement="outside"
             placeholder="Enter your description"
             className="text-gray-700 !w-[90%]"
+            onChange={changeHandler}
           />
         </div>
           </div>
           <div className={`w-1/3 relative`}>
-            <FileUploader />
+            <FileUploader data={data} setData={setData} />
           </div>
         </form>
      

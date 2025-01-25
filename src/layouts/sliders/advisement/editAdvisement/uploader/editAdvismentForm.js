@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import style from "./style.module.scss";
 import Stack from "@mui/material/Stack";
 // import validate from "./validate";
@@ -8,8 +8,9 @@ import { fetchApi } from "api";
 import { Button, Input } from "@nextui-org/react";
 import FileUploader from "components/fileuploader/uploader";
 
-export default function AddAdvisementForm() {
-  const addProUrl = "v1/api/admin/agent/add";
+export default function AddAdvisementForm({ info }) {
+  console.log(info);
+  const editUrl = "api/admin/update";
   const navigate = useNavigate();
   const [focus, setFocus] = useState({});
   const [errors, setErrors] = useState({});
@@ -18,6 +19,19 @@ export default function AddAdvisementForm() {
     link: "",
     img: "",
   });
+  const { id } = useParams();
+  const url = "api/admin/fetch_one";
+
+  const fetch = () => {
+    fetchApi(url, { collaction: "adv", id: id }, "post").then((res) => {
+      if (res.status_code === 200) {
+        setData(res?.Data[0]);
+        setEdit(!!res?.Data[0]?.img);
+      }
+    });
+  };
+  const [edit, setEdit] = useState(false);
+  console.log(data);
 
   const deleteHandler = () => {
     navigate("/slider/advisement", { replace: true });
@@ -43,15 +57,16 @@ export default function AddAdvisementForm() {
       console.log(data);
 
       fetchApi(
-        addProUrl,
+        editUrl,
         {
           title: data.title,
           link: data.link,
           img: data.img,
+          collaction: "adv",
+          id: id,
         },
-        "post"
+        "put"
       ).then((res) => {
-        //(res);
         if (res.status_code === 200) {
           toast.success(" Advisement Edited successfully! ");
           navigate("/advisement");
@@ -73,8 +88,9 @@ export default function AddAdvisementForm() {
   };
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    fetch();
+    // setEdit(!!info?.img);
+  }, []);
   return (
     <>
       <div className={style.addContainer}>
@@ -85,6 +101,7 @@ export default function AddAdvisementForm() {
                 color="light"
                 type="text"
                 name="title"
+                value={data?.title}
                 onFocus={focusHandler}
                 onChange={changeHandler}
                 classNames={{
@@ -100,7 +117,8 @@ export default function AddAdvisementForm() {
               <Input
                 color="light"
                 type="text"
-                name="name"
+                name="link"
+                value={data?.link}
                 onFocus={focusHandler}
                 onChange={changeHandler}
                 classNames={{
@@ -113,9 +131,20 @@ export default function AddAdvisementForm() {
               />
             </div>
           </div>
-          <div className={`w-1/3 relative mr-[100px]`}>
-            <FileUploader />
-          </div>
+          {edit ? (
+            <div className={`w-1/3 relative`}>
+              <img className="rounded-lg" src={data.img} alt={data.title} />
+              <div className="mt-3">
+                <Button color="danger" onClick={() => setEdit(!edit)}>
+                  Edit
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className={`w-1/3 relative`}>
+              <FileUploader setData={setData} />
+            </div>
+          )}
         </form>
         <Stack
           direction="row"

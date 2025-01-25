@@ -18,9 +18,12 @@ import accessPage from "helper/functios";
 import toast from "react-hot-toast";
 import SoftButton from "components/SoftButton";
 import { useNavigate } from "react-router-dom";
-import  Countries  from "assets/countries/countries.json";
-
+import Countries from "assets/countries/countries.json";
+import image1 from "assets/images/profile.jpg";
+import { truncateString } from "helper/functios";
 export default function Professionals() {
+  const categoryUrl = "api/admin/fetch";
+  const professionalUrl = "api/admin/fetch";
   const [number, setnumber] = useState();
   const navigate = useNavigate();
   const [haveFilter, setHaveFilter] = useState(false);
@@ -28,10 +31,10 @@ export default function Professionals() {
   const [totalPages, setTotalPages] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const dispatch1 = useDispatch();
+  const [category, setCategory] = useState();
+  const [subCat, setSubCat] = useState();
   const [userStatus, setUserStatus] = useState(true);
   const [openDeleteModal, setDeleteModal] = useState(false);
-
-  const userurl = "v1/api/admin/user/fetch";
 
   const [filters, setFilters] = useState({
     fullName: "",
@@ -42,8 +45,8 @@ export default function Professionals() {
     city: "",
     address: "",
     category: "",
-    subCategory: "",
-    yearsOfExperience: "",
+    subcategory: "",
+    yearofExperience: "",
   });
   const [enDatetime, setEnDatetime] = useState({
     start: "",
@@ -80,15 +83,16 @@ export default function Professionals() {
   };
 
   const queryHandler = () => {
-    const total = {};
-    if (filters.fName) total["fName"] = { $regex: filters.fName };
+    const total = { type: "professional" };
+    if (filters.name) total["name"] = { $regex: filters.name };
     if (filters.phoneNumber) total["phoneNumber"] = { $regex: filters.phoneNumber };
-    if (filters.country) total["lName"] = { $regex: filters.lName };
-    if (filters.city) total["lName"] = { $regex: filters.lName };
-    if (filters.address) total["province"] = { $regex: filters.province };
-    if (filters.yearsOfExperience) total["martialStatus"] = { $regex: filters.martialStatus };
+    if (filters.country) total["country"] = { $regex: filters.country };
+    if (filters.city) total["city"] = { $regex: filters.city };
+    if (filters.address) total["address"] = { $regex: filters.address };
+    if (filters.category) total["category"] = { $regex: filters.category };
+    if (filters.subcategory) total["subcategory"] = { $regex: filters.subcategory };
+    if (filters.yearofExperience) total["yearofExperience"] = { $regex: filters.yearofExperience };
     if (filters.status) total["status"] = filters.status === "active" ? true : false;
-
     if (enDatetime.start && enDatetime.end) {
       total["dateTime"] = {
         $gt: enDatetime.start,
@@ -116,47 +120,48 @@ export default function Professionals() {
   };
 
   const inputFields = [
-    { label: "Name", name: "fName", type: "text" },
+    { label: "Name", name: "name", type: "text" },
     { label: "Phone number", name: "phoneNumber", type: "number" },
     {
       label: "Country",
       name: "country",
       type: "select",
-      options: Countries.map((country) => ({ label: country.name, value: country.id })),
+      options: Countries.map((country) => ({ label: country.name, value: country.name })),
     },
+
     { label: "City", name: "city", type: "text" },
     { label: "Address", name: "address", type: "text" },
-    { label: "Category", name: "category", type: "select" ,
-      options: [
-        { label: "test1", value: "test" },
-        { label: "test2", value: "test" },
-        { label: "test3", value: "test" },
-        { label: "test4", value: "test" },
-   
-      ]
+    {
+      label: "Category",
+      name: "category",
+      type: "select",
+      options: category?.map((cat) => ({ label: cat?.title, value: cat?.title })),
     },
-    { label: "Subcategory", name: "subcategory", type: "select"
-      , options: [
-        { label: "test1", value: "test" },
-        { label: "test2", value: "test" },
-        { label: "test3", value: "test" },
-        { label: "test4", value: "test" },
-   
-      ]
-     },
-    { label: "Years of Experience", name: "yearsOfExperience", type: "number" },
-    { label: "Status", name: "status", type: "select" ,
+    {
+      label: "Subcategory",
+      name: "subcategory",
+      type: "select",
+      options: subCat?.map((sub) => ({ label: sub?.title, value: sub?.title })),
+    },
+    { label: "Years of Experience", name: "yearofExperience", type: "number" },
+    {
+      label: "Status",
+      name: "status",
+      type: "select",
       options: [
         { label: "Active", value: "active" },
-        { label: "Deactive", value: "deactive" }
-      ]
+        { label: "Deactive", value: "deactive" },
+      ],
     },
   ];
-  
 
   const fetchUsers = () => {
     dispatch1(handler(true));
-    fetchApi(userurl, { page: currentPage }, "post").then((res) => {
+    fetchApi(
+      professionalUrl,
+      { collaction: "company", page: currentPage, query: { type: "professional" } },
+      "post"
+    ).then((res) => {
       if (res?.status_code === 200) {
         dispatch1(handler(false));
         setData(res?.data);
@@ -170,11 +175,14 @@ export default function Professionals() {
   };
 
   const filterFetch = () => {
+    console.log(queryHandler());
     if (Object.keys(queryHandler()).length > 0) {
       dispatch1(handler(true));
+
       fetchApi(
-        userurl,
+        professionalUrl,
         {
+          collaction: "company",
           page: currentPage,
           query: queryHandler(),
         },
@@ -196,13 +204,45 @@ export default function Professionals() {
       toast.error("No value entered for filter ");
     }
   };
+  const getCategory = async () => {
+    dispatch1(handler(true));
+    await fetchApi(categoryUrl, { collaction: "cat", query: {}, page: "all" }, "post").then(
+      (res) => {
+        if (res?.status_code === 200) {
+          dispatch1(handler(false));
+          // console.log(res.data);
 
+          setCategory(res?.data);
+          // setnumber(res?.count);
+          // setTotalPages(res?.max_page);
+        } else {
+          dispatch1(handler(false));
+          toast.error("Something went wrong!");
+        }
+      }
+    );
+  };
+
+  const categorySelect = () => {
+    // console.log(id);
+    dispatch1(handler(true));
+    fetchApi(categoryUrl, { collaction: "subcat", query: {}, page: "all" }, "post").then((res) => {
+      if (res?.status_code === 200) {
+        dispatch1(handler(false));
+        console.log(res?.data);
+
+        setSubCat(res?.data);
+      } else {
+        dispatch1(handler(false));
+        toast.error("Something went wrong!");
+      }
+    });
+  };
   const handleReset = () => {
     setFilters({
       name: "",
       phoneNumber: "",
       country: "",
-      city: "",
       city: "",
       type: "",
       category: "",
@@ -221,6 +261,8 @@ export default function Professionals() {
     setHaveFilter(false);
   };
 
+  // console.log(category);
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -229,6 +271,8 @@ export default function Professionals() {
   }, [currentPage]);
 
   useEffect(() => {
+    getCategory();
+    categorySelect();
     if (accessPage("Professionals")) {
       navigate("/inaccessibility");
     }
@@ -270,8 +314,8 @@ export default function Professionals() {
                   <select name={field.name} value={filters[field.name]} onChange={handleChange}>
                     <option value=""> Choose... </option>
                     {field?.options?.map((option, index) => (
-                      <option key={index} value={option.value}>
-                        {option.label}
+                      <option key={index} value={option?.value}>
+                        {option?.label}
                       </option>
                     ))}
                   </select>
@@ -316,12 +360,12 @@ export default function Professionals() {
               p={4}
               style={{ left: "200px", top: "10px" }}
             >
-              <LengthNumber title="Pofessionals:"number={number?.toLocaleString()} />
+              <LengthNumber title="Pofessionals:" number={number?.toLocaleString()} />
 
               <SoftButton
                 //  style={{ right: "50px", top: "40px" , position: "absolute"}}
                 //
-                 sx={{ marginLeft: "15px" }}
+                sx={{ marginLeft: "15px" }}
                 variant="outlined"
                 color="mainColor"
                 size="small"
@@ -334,7 +378,7 @@ export default function Professionals() {
               </SoftButton>
             </SoftBox>
             <SoftBox
-            overflow="auto"
+              overflow="auto"
               sx={{
                 "& .MuiTableRow-root:not(:last-child)": {
                   "& td": {
@@ -349,6 +393,7 @@ export default function Professionals() {
                   <thead>
                     <tr>
                       <th>Row</th>
+                      <th>Image</th>
                       <th>Name</th>
                       <th>PhoneNumber</th>
                       <th>Country</th>
@@ -366,14 +411,45 @@ export default function Professionals() {
                     {data?.map((item, index) => (
                       <tr key={index}>
                         <td>{(currentPage - 1) * 12 + index + 1}</td>
-                        <td>Arat g</td>
-                        <td>{item.phoneNumber}</td>
-                        <td>Austria</td>
-                        <td>Vienna</td>
-                        <td>street-0 no-47</td>
-                        <td>test</td>
-                        <td>test</td>
-                        <td>2-5</td>
+                        <td>
+                          {item.img ? (
+                            <div className={`${style.userDetail} flex flex-col gap-2 items-center`}>
+                              <img
+                                src={item.img}
+                                style={{
+                                  width: "50px",
+                                  height: "50px",
+                                  borderRadius: "20%",
+                                  transition: "transform 0.8s ease",
+                                }}
+                                onMouseEnter={(e) =>
+                                  (e.currentTarget.style.transform = "scale(1.5)")
+                                }
+                                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                              />
+                            </div>
+                          ) : (
+                            <div className={`${style.userDetail} flex flex-col gap-2 items-center`}>
+                              <img
+                                style={{
+                                  width: "50px",
+                                  height: "50px",
+                                  borderRadius: "20%",
+                                  transition: "transform 0.8s ease",
+                                }}
+                                src={image1}
+                              />
+                            </div>
+                          )}
+                        </td>
+                        <td>{ truncateString(item?.name,10) }</td>
+                        <td>{item?.phoneNumber}</td>
+                        <td>{item?.country}</td>
+                        <td>{item?.city}</td>
+                        <td>{ truncateString(item?.address,10) }</td>
+                        <td>{item?.category}</td>
+                        <td>{item?.subcategory}</td>
+                        <td>{item?.yearofExperience}</td>
                         <td>{item.dateTime.slice(0, 10)}</td>
                         <td>{item.status ? "Active" : "Deactive"}</td>
                         <td className={`${style.userDetail} flex flex-col items-start gap-2`}>
@@ -388,7 +464,7 @@ export default function Professionals() {
                             }}
                             userId={item._id}
                             phoneNumber={item.phoneNumber}
-                            fName={item.fName}
+                            fName={item.name}
                             lName={item.lName}
                           />
                         </td>

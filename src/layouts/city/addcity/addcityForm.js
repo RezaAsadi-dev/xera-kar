@@ -1,33 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import style from "./style.module.scss";
 import Stack from "@mui/material/Stack";
-import { styled } from "@mui/material/styles";
-import { red } from "@mui/material/colors";
-import { green } from "@mui/material/colors";
-// import validate from "./validate";
-// import { fetchApi } from "api";
 import { Button, Input, SelectItem } from "@nextui-org/react";
 import { Select } from "@nextui-org/react";
 import countriesData from "../countries/countries.json";
 import animationData from "assets/animation/Animation.json";
 import Lottie from "react-lottie-player";
+import { fetchApi } from "api";
 
 export default function AddCityForm() {
-  // const addCityUrl = "v1/api/admin/agent/add";
+  const addCityUrl = "api/admin/add";
   const [selectedCountry, setSelectedCountry] = useState("");
   const [newCity, setNewCity] = useState("");
   const [focus, setFocus] = useState({});
-  const [errors, setErrors] = useState({});
   const [data, setData] = useState({
     country: "",
     city: "",
   });
   const navigate = useNavigate();
-  const handleCountryChange = (value) => {
-    setSelectedCountry(value);
-    setData({ ...data, country: value });
+  const handleCountryChange = (e) => {
+    setSelectedCountry(e.target.value);
+    setData({ ...data, country: e.target.value });
   };
 
   const handleCityInput = (e) => {
@@ -36,23 +31,45 @@ export default function AddCityForm() {
   };
 
   const submitHandler = (event) => {
+    console.log(data);
+
     event.preventDefault();
     if (data.country && data.city) {
-      const countryExists = countriesData.some(
-        (country) => country.country === data.country
-      );
-
-      if (countryExists) {
-        toast.success("City added successfully!");
-        navigate("/city");
-      } else {
-        // Add new country if it doesn't exist
-        countriesData.push({
+      fetchApi(
+        addCityUrl,
+        {
           country: data.country,
-        });
-        toast.success("City added successfully!");
-        navigate("/city");
-      }
+          city: data.city,
+          collaction: "city",
+        },
+        "post"
+      ).then((res) => {
+        if (res.status_code === 200) {
+          toast.success(" city registered successfully! ");
+          navigate("/city");
+        } else if (res.status_code === 401) {
+          if (res.description === "unauthorized") {
+            navigate("/login", { replace: true });
+          }
+        } else if (res.status_code === 402) {
+          toast.error(res.description_fa_user);
+        }
+      });
+      // const countryExists = countriesData.some(
+      //   (country) => country.country === data.country
+      // );
+
+      // if (countryExists) {
+      //   toast.success("City added successfully!");
+      //   navigate("/city");
+      // } else {
+      //   // Add new country if it doesn't exist
+      //   countriesData.push({
+      //     country: data.country,
+      //   });
+      //   toast.success("City added successfully!");
+      //   navigate("/city");
+      // }
     } else {
       toast.error("Please fill in both the country and city fields.");
     }
@@ -61,14 +78,6 @@ export default function AddCityForm() {
   const deleteHandler = () => {
     navigate("/city", { replace: true });
   };
-
-  useEffect(() => {
-    console.log("Data State: ", data); // Debugging
-  }, [data]);
-
-  //   useEffect(() => {
-  //     setErrors(validate(data));
-  //   }, [data, focus]);
 
   const focusHandler = (event) => {
     setFocus({ ...focus, [event.target.name]: true });
@@ -80,22 +89,22 @@ export default function AddCityForm() {
         <form className={`${style.contantAddForm} justify-center gap-4`}>
           <div className="w-[45%] flex flex-col !gap-y-4 md:flex md:justify-center">
             <div className={style.formItem}>
-            <Select
-              color="light"
-              name="country"
-              onChange={(value) => handleCountryChange(value)}
-              value={selectedCountry}
-              className="text-[14px]"
-              variant="bordered"
-              labelPlacement="outside"
-              label="Country"
-            >
-              {countriesData.map((country) => (
-                <SelectItem key={country.name} value={country.name}>
-                  {country.name}
-                </SelectItem>
-              ))}
-            </Select>
+              <Select
+                color="light"
+                name="country"
+                onChange={handleCountryChange}
+                value={selectedCountry}
+                className="text-[14px]"
+                variant="bordered"
+                labelPlacement="outside"
+                label="Country"
+              >
+                {countriesData.map((country) => (
+                  <SelectItem key={country.name} value={country.name}>
+                    {country.name}
+                  </SelectItem>
+                ))}
+              </Select>
             </div>
 
             <div className={style.formItem}>
@@ -109,7 +118,6 @@ export default function AddCityForm() {
                 classNames={{
                   input: ["text-[14px] mt-2"],
                 }}
-                // isInvalid={errors.city && focus.city}
                 variant="bordered"
                 labelPlacement="outside"
                 label="City"
@@ -117,7 +125,7 @@ export default function AddCityForm() {
             </div>
           </div>
 
-        <Lottie loop animationData={animationData} play className="w-[45%] max-sm:hidden" />
+          <Lottie loop animationData={animationData} play className="w-[45%] max-sm:hidden" />
         </form>
 
         <Stack
@@ -140,8 +148,7 @@ export default function AddCityForm() {
             className="w-[130px] bg-red-500 text-white "
             onClick={deleteHandler}
           >
-            {" "}
-            Cancel{" "}
+            Cancel
           </Button>
         </Stack>
       </div>

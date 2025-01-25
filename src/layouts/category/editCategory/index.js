@@ -28,20 +28,18 @@ function EditCategory() {
         <SoftBox mb={3}>
           <Card style={{ overflow: "auto" }}>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-              <SoftTypography variant="h6">
-                Edit Category
-              </SoftTypography>
+              <SoftTypography variant="h6">Edit Category</SoftTypography>
             </SoftBox>
-              <EditCategoryForm/>
+            <EditCategoryForm />
           </Card>
         </SoftBox>
         <Card className="p-[15px]">
-            <div className="sm:text-[14px] gap-5 text-[12px] text-gray-400 flex justify-between">
-              <span>
-                © All rights of this site belong to XeraKar company. Any copying is prosecuted.
-              </span>
-            </div>
-          </Card>
+          <div className="sm:text-[14px] gap-5 text-[12px] text-gray-400 flex justify-between">
+            <span>
+              © All rights of this site belong to XeraKar company. Any copying is prosecuted.
+            </span>
+          </div>
+        </Card>
       </SoftBox>
     </DashboardLayout>
   );

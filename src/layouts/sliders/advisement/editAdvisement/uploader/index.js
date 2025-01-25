@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
@@ -25,11 +25,9 @@ function EditAdvisement() {
         <SoftBox mb={3}>
           <Card style={{ overflow: "auto" }}>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-              <SoftTypography variant="h6">
-                Edit Advisement 
-              </SoftTypography>
+              <SoftTypography variant="h6">Edit Advisement</SoftTypography>
             </SoftBox>
-              <EditAdvisementForm/>
+            <EditAdvisementForm   />
           </Card>
         </SoftBox>
         <Card className="mt-[15px] p-[15px]">

@@ -29,7 +29,7 @@ import SoftButton from "components/SoftButton/index";
 
 function Category() {
   const dispatch1 = useDispatch();
-  const userurl = "v1/api/admin/user/fetch";
+  const categoryUrl = "api/admin/fetch";
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState();
@@ -37,21 +37,22 @@ function Category() {
   const [data, setData] = useState([]);
   const [deleteModal, setDeleteModal] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  
 
   const fetchUsers = () => {
     dispatch1(handler(true));
-    fetchApi(userurl, { page: currentPage }, "post").then((res) => {
-      if (res?.status_code === 200) {
-        dispatch1(handler(false));
-        setData(res?.data);
-        setnumber(res?.count);
-        setTotalPages(res?.max_page);
-      } else {
-        dispatch1(handler(false));
-        toast.error("Something went wrong!");
+    fetchApi(categoryUrl, { collaction: "cat", query: {}, page: currentPage }, "post").then(
+      (res) => {
+        if (res?.status_code === 200) {
+          dispatch1(handler(false));
+          setData(res?.data);
+          setnumber(res?.count);
+          setTotalPages(res?.max_page);
+        } else {
+          dispatch1(handler(false));
+          toast.error("Something went wrong!");
+        }
       }
-    });
+    );
   };
 
   const handlePageChange = (pageNumber) => {
@@ -120,10 +121,10 @@ function Category() {
                       <tr key={index}>
                         <td>{(currentPage - 1) * 12 + index + 1}</td>
                         <td>
-                          {item.profilePic ? (
+                          {item.img ? (
                             <div className={`${style.userDetail} flex flex-col gap-2 items-center`}>
                               <img
-                                src={item.profilePic}
+                                src={item.img}
                                 style={{
                                   width: "50px",
                                   height: "50px",
@@ -150,9 +151,9 @@ function Category() {
                             </div>
                           )}
                         </td>
-                        <td>{item.fName}</td>
+                        <td>{item.title}</td>
                         <td>{item.dateTime.slice(0, 10)}</td>
-                        <td>{item.weight}</td>
+                        <td>{item.weight ? item.weight : "-"}</td>
                         {/* <Button onPress={onOpen}> Add Sub </Button> */}
 
                         <td>{item.status ? "active" : "deactive"}</td>
@@ -167,9 +168,7 @@ function Category() {
                                 setUserId(item._id);
                                 setUserStatus(item.status ? deactive : active);
                               }}
-                              phoneNumber={item.phoneNumber}
-                              fName={item.fName}
-                              lName={item.lName}
+                              reFetch={fetchUsers}
                             />
                           </div>
                         </td>

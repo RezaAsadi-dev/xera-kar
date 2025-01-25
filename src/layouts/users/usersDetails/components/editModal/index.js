@@ -16,20 +16,13 @@ import Countries from "assets/countries/countries.json";
 
 const EditModal = ({ closeModal, id, fetchData, info }) => {
   const dispatch = useDispatch();
-  const updateurl = "v1/api/admin/user/update";
-
+  const updateurl = "api/admin/update";
+  const [cities, setCities] = useState([]); 
   const [editedData, setEditedData] = useState({ id: id });
   const [formData, setFormData] = useState([]);
   const [checkBox, setCheckBox] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [focus, setFocus] = useState({});
-  
-  const [errorNotMatch, setErrorNotMatch] = useState(false);
-  const [errorOldPass, setErrorOldPass] = useState(false);
-  const [errorNewPass, setErrorNewPass] = useState({
-    newPass: false,
-    reNewPass: false,
-  });
 
   const inputs = [
     { label: " Name", name: "name", type: "text" },
@@ -41,29 +34,24 @@ const EditModal = ({ closeModal, id, fetchData, info }) => {
       type: "select",
       options: Countries.map((country) => ({ label: country.name, value: country.id })),
     },
-    { label: "City", name: "city", type: "text" },
+    { label: "City", name: "city", type: "select",
+      options: cities.map((city) => ({ label: city.name, value: city.id })),
+     },
     { label: "Address", name: "address", type: "text" },
-    // {
-    //   label: "Gender",
-    //   name: "gender",
-    //   type: "select",
-    //   options: [
-    //     { key: "male", label: "Male" },
-    //     { key: "female", label: "Female" },
-    //   ],
-    // },
-    // {
-    //   label: " Marital status",
-    //   name: "martialStatus",
-    //   type: "select",
-    //   options: [
-    //     { key: "married", label: "Married" },
-    //     { key: "single", label: "Single" },
-    //   ],
-    // },
-    
-  
   ];
+
+  const handleCountryChange = (selectedCountryId) => {
+    // Fetch cities for the selected country, with collaction: 'user'
+    fetchApi("api/admin/fetch", { collaction: "user", query: { country: selectedCountryId }, page: "all" }, "post")
+      .then((res) => {
+        if (res?.status_code === 200) {
+          setCities(res.data); // Update city options based on the fetched data
+        } else {
+          toast.error("Failed to fetch cities");
+        }
+      });
+  };
+
   const focusHandler = (event) => {
     setFocus({ ...focus, [event.target.name]: true });
   };
@@ -71,8 +59,6 @@ const EditModal = ({ closeModal, id, fetchData, info }) => {
   const checkBoxHandler = (event) => {
     setCheckBox(event.target.checked);
   };
-
-  
 
   const handleChange = (e, index) => {
     const { name, value } = e.target;

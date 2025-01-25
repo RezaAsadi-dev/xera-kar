@@ -12,7 +12,7 @@ import style from "./DeleteModal.module.css";
 
 const DeleteModal = ({ closeModal, id, fetchData }) => {
   const dispatch = useDispatch();
-  const deleteUrl = "v1/api/admin/operator/deleate";
+  const deleteUrl = "api/admin/delet";
 
   const RedButton = styled(Button)(({ theme }) => ({
     color: theme.palette.getContrastText(red[800]),
@@ -34,7 +34,11 @@ const DeleteModal = ({ closeModal, id, fetchData }) => {
 
   const handleDelete = async () => {
     dispatch(handler(true));
-    const res = await fetchApi(deleteUrl, { id }, "post");
+    const res = await fetchApi(
+      deleteUrl,
+      { collaction: "admin", query: { type: "operator" }, id: id },
+      "post"
+    );
     dispatch(handler(false));
     if (res?.status_code === 200) {
       fetchData();
@@ -66,9 +70,7 @@ const DeleteModal = ({ closeModal, id, fetchData }) => {
           <h3 className={style.headerText}> Delete Manager </h3>
         </div>
         <div className={style.deleteTitle}>
-          <h1>
-            Do you want to delete?
-          </h1>
+          <h1>Do you want to delete?</h1>
         </div>
         <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
           <GreenButton variant="contained" onClick={handleDelete}>

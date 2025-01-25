@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import style from "./style.module.scss";
 import Stack from "@mui/material/Stack";
-import validate from "./validate";
 import { fetchApi } from "api";
 import { Button, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
 import FileUploader from "components/fileuploader/uploader";
 
 export default function EditCategoryForm() {
-  const addCatUrl = "v1/api/admin/agent/add";
+  const catUrl = "api/admin/fetch_one";
+  const editcatUrl = "api/admin/update";
   const navigate = useNavigate();
   const [focus, setFocus] = useState({});
   const [errors, setErrors] = useState({});
-  const [categoryImage, setCategoryImage] = useState(null);
-  const [previewImage, setPreviewImage] = useState(null);
-  const [statusSelect, setStatusSelect] = useState(["active", "inactive"]);
+  const [edit, setEdit] = useState(false);
+
+  const { id } = useParams();
 
   const [data, setData] = useState({
     title: "",
@@ -30,39 +30,43 @@ export default function EditCategoryForm() {
     }
   };
 
-  //   useEffect(() => {
-  //     setErrors(validate(data));
-  //   }, [data, focus]);
-
   const changeHandler = (e) => {
     const { name, value } = e.target;
-    setData({
-      ...data,
+    setData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
   };
 
   const focusHandler = (event) => {
     setFocus({ ...focus, [event.target.name]: true });
   };
+  const getCat = () => {
+    fetchApi(catUrl, { collaction: "cat", id: id }, "post").then((res) => {
+      if (res.status_code === 200) {
+        setData(res?.Data[0]);
+        setEdit(!!res?.Data[0].img);
+      }
+      console.log(res);
+    });
+  };
 
   const submitHandler = (event) => {
-    event.preventDefault();
     if (!Object.keys(errors).length) {
       console.log(data);
 
       fetchApi(
-        addCatUrl,
+        editcatUrl,
         {
           title: data.title,
-          descriprion: data.description,
-          status: data.status,
+          description: data.description,
+          status: Boolean(data.status),
           img: data.img,
-
+          id: id,
+          collaction: "cat",
         },
-        "post"
+        "put"
       ).then((res) => {
-        //(res);
         if (res.status_code === 200) {
           toast.success(" Category edited successfully! ");
           navigate("/category");
@@ -85,16 +89,8 @@ export default function EditCategoryForm() {
   };
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
-
-
-  const selectChange = (value) => {
-    setData({
-      ...data,
-      status: value, // Assuming you want to update the 'status' field in `data`
-    });
-  };
+    getCat();
+  }, []);
 
   return (
     <>
@@ -107,6 +103,7 @@ export default function EditCategoryForm() {
                   color="light"
                   type="text"
                   name="title"
+                  value={data?.title}
                   onFocus={focusHandler}
                   onChange={changeHandler}
                   className="w-full"
@@ -123,35 +120,54 @@ export default function EditCategoryForm() {
                 <Select
                   color="light"
                   name="status"
-                  // onFocus={focusHandler}
-                  onChange={(e) => selectChange(e)}
+                  selectedKeys={[String(data?.status) ?? "false"]}
+                  onChange={changeHandler}
                   classNames={{
                     input: ["text-[14px]"],
                   }}
                   variant="bordered"
                   labelPlacement="outside"
                   label="Status"
-                // isInvalid={errors.phone && focus.phone}
+                  items={[
+                    { key: "true", label: "Active" },
+                    { key: "false", label: "Inactive" },
+                  ]}
                 >
-                  {statusSelect.map((item) => (
-                    <SelectItem key={item}>{item}</SelectItem>
-                  ))}
+                  {(item) => (
+                    <SelectItem key={item.key} value={item.key}>
+                      {item.label}
+                    </SelectItem>
+                  )}
                 </Select>
               </div>
             </div>
             <div className="mt-4 ">
               <Textarea
                 variant="bordered"
-                label="Description"
+                label="description"
+                name="description"
+                value={data?.description}
+                onChange={changeHandler}
                 labelPlacement="outside"
                 placeholder="Enter your description"
                 className="text-gray-700 !h-[150px] !w-full"
               />
             </div>
           </div>
-          <div className=" md:w-1/2 relative">
-            <FileUploader />
-          </div>
+          {edit ? (
+            <div className={`w-1/3 relative`}>
+              <img className="rounded-lg" src={data.img} alt={data.title} />
+              <div className="mt-3">
+                <Button color="danger" onClick={() => setEdit(!edit)}>
+                  Edit
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className={`w-1/3 relative`}>
+              <FileUploader setData={setData} />
+            </div>
+          )}
         </form>
 
         <Stack

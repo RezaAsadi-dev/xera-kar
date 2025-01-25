@@ -1,13 +1,8 @@
 import Grid from "@mui/material/Grid";
 import SoftBox from "components/SoftBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import Footer from "examples/Footer";
-import ProfileInfoCard from "examples/Cards/userInfoCard/ProfileInfoCard";
-// import Header from "./components/Header";
-import Header from "./Header";
 import { useState } from "react";
 import { useEffect } from "react";
-import Chat from "./chat";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchApi } from "api";
 import toast from "react-hot-toast";

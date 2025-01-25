@@ -9,10 +9,9 @@ import { GrSettingsOption } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
 import accessPage from "helper/functios";
 import toast from "react-hot-toast";
-import { IoMdAddCircle } from "react-icons/io";
 import { VscCompassActive } from "react-icons/vsc";
 import { FiInfo } from "react-icons/fi";
-
+import { fetchApi } from "api";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -51,8 +50,8 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function Options({ phoneNumber,lName,fName, userId, status }) {
-
+export default function Options({ reFetch, userId, status }) {
+  const url = "api/admin/update";
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -60,12 +59,17 @@ export default function Options({ phoneNumber,lName,fName, userId, status }) {
   const handleClick = (event, type, id) => {
     setAnchorEl(event.currentTarget);
     if (type === "detail") {
+      setAnchorEl(null);
       navigate(`/category/categoryDetails/${id}`);
     } else if (type === "edit") {
+      setAnchorEl(null);
       navigate(`/category/editCategory/${id}`);
-      }
+    } else if (type === "disable") {
+      setAnchorEl(null);
+      submit();
     }
-  
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -74,22 +78,20 @@ export default function Options({ phoneNumber,lName,fName, userId, status }) {
     if (accessPage(" category ", type)) {
       toast.error(" inaccesibility ");
       handleClose();
-      return false
-    }
-    else return true
+      return false;
+    } else return true;
   };
   const submit = () => {
-    fetchApi(disableOrganUrl, { id, status: !status}, "put").then((res) => {
+    fetchApi(url, { collaction: "cat", id: userId, status: !status }, "put").then((res) => {
       if (res?.status_code === 200) {
         if (status) {
-          toast.success(" User deactivated successfully! ");
+          toast.success(" Category deactivated successfully! ");
         } else {
-          toast.success(" User activated successfully! ");
+          toast.success(" Category activated successfully! ");
         }
 
-        refetch();
+        reFetch();
       } else {
-        dispatch1(handler(false));
         toast.error(" Something went wrong !");
       }
     });
@@ -135,16 +137,6 @@ export default function Options({ phoneNumber,lName,fName, userId, status }) {
           <EditIcon />
           Edit
         </MenuItem>
-        {/* <MenuItem
-          onClick={(e) => {
-            handleClose();
-            handleClick(e, "add", userId);
-          }}
-          disableRipple
-        >
-        <IoMdAddCircle className="mr-[12px]"/>
-         Add Sub
-        </MenuItem> */}
         <MenuItem
           onClick={(e) => {
             handleClose();

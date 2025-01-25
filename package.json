@@ -31,7 +31,6 @@
     "@tiptap/pm": "^2.5.4",
     "@tiptap/react": "^2.5.4",
     "@tiptap/starter-kit": "^2.8.0",
-    "@vercel/speed-insights": "^1.1.0",
     "ajv": "^6.12.6",
     "ajv-keywords": "^3.5.2",
     "axios": "^1.6.8",

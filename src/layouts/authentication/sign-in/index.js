@@ -24,7 +24,7 @@ import { IoEye, IoEyeOff } from "react-icons/io5";
 function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const loginAdmin = `${mainAddress}/v1/api/admin/auth/login`;
+  const loginAdmin = `${mainAddress}/api/admin/login`;
   const loginOperator = "v1/api/admin/auth/operatorlogin";
   const [value, setValue] = useState("1");
   const { pathname } = useLocation();
@@ -81,7 +81,7 @@ function SignIn() {
         axios
           .post(loginAdmin, {
             user: adminData.loginUser,
-            password: adminData.loginPassword,
+            pass: adminData.loginPassword,
           })
           .then((res) => {
             if (res?.data?.status_code === 200) {

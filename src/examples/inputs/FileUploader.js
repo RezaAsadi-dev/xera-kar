@@ -5,7 +5,7 @@ import "./fileUploader.css";
 import { fetchApi } from "api";
 const FileUploader = () => {
   const [file, setFile] = useState(null);
-  const url = "api/user/home/uploader"
+  const url = "image/uploader"
 
   const handleFileChange = async(e) => {
     const file =await e.target.files[0];

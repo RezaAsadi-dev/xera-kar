@@ -3,68 +3,27 @@ import { Card } from "@mui/material";
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 import style from "./style.module.css";
-import { useNavigate } from "react-router-dom";
+
 import { useDisclosure } from "@nextui-org/react";
-import image1 from "assets/images/profile.jpg";
 import {
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
   Button,
-  Pagination,
   Modal,
 } from "@nextui-org/react";
 import Options from "../../options";
 
-// function InfoItem({ label, value }) {
-//   // Convert value to string if it's an object
-//   const displayValue = typeof value === "object" && value !== null ? JSON.stringify(value) : value;
+import { truncateString } from "helper/functios";
 
-//   return (
-//     <SoftBox display="flex" py={1} pr={2}>
-//       <SoftTypography variant="button" fontWeight="bold" textTransform="capitalize">
-//         {label} :
-//       </SoftTypography>
-//       <SoftTypography
-//         variant="button"
-//         fontWeight="regular"
-//         color="text"
-//         sx={{ marginRight: "6px" }}
-//       >
-//         <SoftBox display="flex" ml={0.5}>
-//           {displayValue}
-//         </SoftBox>
-//       </SoftTypography>
-//     </SoftBox>
-//   );
-// }
-
-function Infos({ info, title }) {
-  const adviserId = info ? info[0]?.adviserid : "";
-  const navigate = useNavigate();
-  const [openModal, setOpenModal] = useState(false);
+function Infos({ info }) {
+ 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const nfoItems = [
-    { label: "ّFirst Name", value: "fName" },
-    { label: "Last Name ", value: "lName" },
-    { label: "phoneNumber ", value: "phoneNumber" },
-    { label: "Email", value: "email" },
-    { label: " birthday", value: "birthday" },
-    { label: "BloodType ", value: "bloodType" },
-    { label: "Gender", value: "gender" },
-    { label: "Weight", value: "weight" },
-    { label: "Height", value: "height" },
-    { label: " Martial Status ", value: "martialStatus" },
-    { label: "Job Major", value: "jobMajor" },
-    { label: "Certificate ", value: "certificate" },
-    { label: " Date Time", value: "dateTime", fun: (dateTime) => dateTime?.slice(0, 10) },
-  ];
 
   const tableData = [1, 2, 3, 4, 5];
   return (
     <div className="h-screen ">
-      {" "}
       <Card style={{ padding: "20px" }}>
         <div className=" flex justify-between py-4 ">
           <SoftTypography style={{ padding: "10px 0", fontSize: "16px", color: "#3f3f3f" }}>
@@ -98,7 +57,6 @@ function Infos({ info, title }) {
             <tbody>
               <tr>
                 <td>
-                  {" "}
                   <div className={`${style.userDetail} flex flex-col gap-2 items-center`}>
                     <img
                       style={{
@@ -107,20 +65,24 @@ function Infos({ info, title }) {
                         borderRadius: "20%",
                         transition: "transform 0.8s ease",
                       }}
-                      src={image1}
+                      src={info[0]?.projectImg}
                     />
                   </div>
                 </td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
+                <td>{info[0]?.title}</td>
+                <td>{info[0]?.category}</td>
+                <td>{info[0]?.subcategory}</td>
+                <td>{info[0]?.date.slice(0, 10)}</td>
                 <td>
                   <Button onPress={onOpen}> View </Button>
                 </td>{" "}
-                <td>test</td>
-                <td>test</td>
+                <td>{info[0]?.status ? "Active" : "Deavtive"}</td>
+                <td>{info[0]?.dateTime.slice(0, 10)}</td>
               </tr>
+
+              {/* {info.map((item, index) => {
+               
+              })} */}
             </tbody>
           </table>
         </SoftBox>
@@ -157,14 +119,16 @@ function Infos({ info, title }) {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>test</td>
-                  <td>test</td>
-                  <td>test</td>
-                  <td>test</td>
-                  <td>test</td>
-                  <td>test</td>
-                </tr>
+                {info[0]?.userdata?.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item?.name}</td>
+                    <td>{item?.email}</td>
+                    <td>{item?.country}</td>
+                    <td>{truncateString(item?.address, 10)}</td>
+                    <td>{item?.status ? "Active" : "Deavtive"}</td>
+                    <td>{item?.dateTime.slice(0, 10)}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </SoftBox>
@@ -195,27 +159,29 @@ function Infos({ info, title }) {
                 <tr>
                   <th>Row</th>
                   <th>Name</th>
-                  <th>Email Address</th>
+                  {/* <th>Email Address</th> */}
                   <th>Amount</th>
                   <th>Description</th>
                   <th>DateTime</th>
+                  <th>Deadline</th>
                   <th>Status</th>
                   <th>Operation</th>
                 </tr>
               </thead>
               <tbody>
-                {tableData.map((item, index) => (
+                {info[0]?.response?.map((item, index) => (
                   <tr key={index}>
-                    <td>1</td>
-                    <td>test</td>
-                    <td>test</td>
-                    <td>test</td>
-                    <td>test</td>
-                    <td>test</td>
-                    <td>test</td>
+                    <td>{index + 1}</td>
+                    <td>{item?.profile[0]?.name}</td>
+                    {/* <td>test</td> */}
+                    <td>{item?.amount}</td>
+                    <td>{truncateString(item?.description, 10)}</td>
+                    <td>{item?.dateTime.slice(0, 10)}</td>
+                    <td>{item?.date}</td>
+                    <td>{item?.workingStatus}</td>
                     <td>
                       <div className={`${style.userDetail} flex flex-col gap-2`}>
-                        <Options userId={item?._id} />
+                        <Options userId={item?._id}  status={item?.workingStatus} />
                       </div>
                     </td>
                   </tr>
@@ -235,31 +201,7 @@ function Infos({ info, title }) {
             <>
               <ModalHeader className="flex flex-col gap-1">Description</ModalHeader>
               <ModalBody style={{ overflowY: "auto", maxHeight: "500px", fontSize: 16 }}>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non
-                  risus hendrerit venenatis. Pellentesque sit amet hendrerit risus, sed porttitor
-                  quam.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non
-                  risus hendrerit venenatis. Pellentesque sit amet hendrerit risus, sed porttitor
-                  quam.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non
-                  risus hendrerit venenatis. Pellentesque sit amet hendrerit risus, sed porttitor
-                  quam.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non
-                  risus hendrerit venenatis. Pellentesque sit amet hendrerit risus, sed porttitor
-                  quam.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non
-                  risus hendrerit venenatis. Pellentesque sit amet hendrerit risus, sed porttitor
-                  quam.
-                </p>
+                {info[0]?.description}
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>

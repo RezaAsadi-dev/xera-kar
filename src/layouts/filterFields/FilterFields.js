@@ -29,6 +29,7 @@ export default function FilterFields({ title, filterFetch, resetHandler, haveFil
                   {isAccordionOpen ? (
                     <>
                       {haveFilter && (
+                        
                         <Button
                           className="w-[95px] sm:w-[125px] h-[28px] sm:h-[32px] ml-2"
                           color="danger"
@@ -40,7 +41,7 @@ export default function FilterFields({ title, filterFetch, resetHandler, haveFil
                         </Button>
                       )}
                       <Button
-                        className="w-[92px] sm:w-[125px] h-[28px] sm:h-[32px]"
+                        className="w-[92px] sm:w-[125px] ml-2 h-[28px] sm:h-[32px]"
                         color="success"
                         variant="flat"
                         onClick={filterFetch}

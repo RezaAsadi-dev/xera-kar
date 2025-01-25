@@ -65,6 +65,7 @@ export default function Options({ openModal, refetch, onClick, phoneNumber, user
         setAnchorEl(null);
       }
     } else if (type === "detail") {
+      
       navigate(`/slider/advisement/advisementdetails/${id}`);
     }
   };

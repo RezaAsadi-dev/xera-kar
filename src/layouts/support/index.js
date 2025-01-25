@@ -27,8 +27,7 @@ const Support = () => {
   const dispatch1 = useDispatch();
   const loader = useSelector(selectLoader);
   const navigate = useNavigate();
-  const getTicketsUrl = "v1/api/admin/ticket/get_my_tickets";
-  const getOneTicketUrl = "v1/api/admin/ticket/get_one_tickets";
+  const getTicketsUrl = "api/admin/get_my_tickets";
 
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
@@ -37,30 +36,29 @@ const Support = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const fetchChats = () => {
-    fetchApi(getTicketsUrl, { page: currentPage }, "post").then((res) => {
-      if (res?.status_code === 200) {
-        dispatch1(handler(false));
-        setData(res?.Data.data);
-        setTotalPages(res?.max_page);
-      } else {
-        dispatch1(handler(false));
-        toast.error("  Something went wrong!");
+    fetchApi(getTicketsUrl, { page: currentPage }, "post").then(
+      (res) => {
+        if (res?.status_code === 200) {
+          dispatch1(handler(false));
+          setData(res?.Data?.data);
+          setTotalPages(res?.max_page);
+        } else {
+          dispatch1(handler(false));
+          toast.error("  Something went wrong!");
+        }
       }
-    });
+    );
   };
 
   const filterFetch = () => {
     fetchApi(
       getTicketsUrl,
-      {
-        page: currentPage,
-        search,
-      },
+      {  page: currentPage, search },
       "post"
     ).then((res) => {
       if (res?.status_code === 200) {
         dispatch1(handler(false));
-        setData(res?.Data.data);
+        setData(res?.Data?.data);
         setTotalPages(res?.max_page);
       } else {
         dispatch1(handler(false));
@@ -93,7 +91,7 @@ const Support = () => {
       setSelectedChat(chat);
     }
   }, [data]);
-
+// console.log(data)
   useEffect(() => {
     if (accessPage("Support")) {
       navigate("/inaccessibility");
@@ -123,8 +121,8 @@ const Support = () => {
               />
             </div>
             <div className="flex flex-col space-y-1 h-full overflow-y-auto w-full pt-2">
-              {data.length > 0 ? (
-                data.map((chat) => (
+              {data?.length > 0 ? (
+                data?.map((chat) => (
                   <ChatCard
                     key={chat._id}
                     data={chat}
@@ -134,7 +132,7 @@ const Support = () => {
                 ))
               ) : (
                 <div className="p-2 w-full text-center bg-gray-100 rounded-md">
-                  <p className="text-sm">  No ticket has been created! </p>
+                  <p className="text-sm"> No ticket has been created! </p>
                 </div>
               )}
             </div>
@@ -145,7 +143,7 @@ const Support = () => {
               alignItems="center"
               p={3}
             >
-              {data.length > 0 && totalPages !== 1 && (
+              {data?.length > 0 && totalPages !== 1 && (
                 <Pagination
                   showControls
                   page={currentPage}
@@ -166,8 +164,8 @@ const Support = () => {
             <FiLoader size={24} className="animate-spin m-auto" />
           ) : selectedChat ? (
             <ChatPage chatData={selectedChat} setSelected={setSelectedChat} refetch={fetchChats} />
-          ) : data.length > 0 ? (
-            <p className="text-base">  Please choose a ticket... </p>
+          ) : data?.length > 0 ? (
+            <p className="text-base"> Please choose a ticket... </p>
           ) : (
             <Lotties />
           )}
@@ -179,7 +177,6 @@ const Support = () => {
 
 // each chat on the rigth sidebar
 const ChatCard = ({ data, setSelect, selected }) => {
-  console.log(data);
   const { name, ticket, sender_type } = data;
   const lastTicket = ticket[ticket.length - 1];
   const yearAndTime = lastTicket.datetime.split(" ");
@@ -190,9 +187,8 @@ const ChatCard = ({ data, setSelect, selected }) => {
     switch (sender_type) {
       case "user":
         return <FiUser size={20} />;
-      case "professional":
+      case "company":
         return <RiOrganizationChart size={20} />;
- 
     }
   };
 
@@ -229,15 +225,12 @@ const ChatCard = ({ data, setSelect, selected }) => {
       <div className="flex flex-col items-end h-full">
         <FiChevronRight size={20} className="flex flex-shrink-0 mt-2" />
         {sender_type === "user" && (
-          <div className="mt-auto text-xs bg-slate-700 py-1.5 px-2 rounded-md text-white">
-            User
-          </div>
+          <div className="mt-auto text-xs bg-slate-700 py-1.5 px-2 rounded-md text-white">User</div>
         )}
-        {sender_type === "professional" && (
+        {sender_type === "company" && (
           <div className="mt-auto text-xs bg-orange-700 py-1.5 px-2 rounded-md text-white">
-            Professional
+            company
           </div>
-      
         )}
       </div>
     </div>
@@ -246,8 +239,7 @@ const ChatCard = ({ data, setSelect, selected }) => {
 
 // chats of the selected user
 const ChatPage = ({ chatData, setSelected, refetch }) => {
-  const sendChatUrl = "v1/api/admin/ticket/send_chat";
-
+  const sendChatUrl = "api/admin/send_chat";
   const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -256,14 +248,14 @@ const ChatPage = ({ chatData, setSelected, refetch }) => {
   const divRef = useRef(null);
 
   const { _id, name, sender_type, ticket: tickets } = chatData;
+// console.log(tickets);
 
   const senderIndicator = (sender_type) => {
     switch (sender_type) {
       case "user":
         return <FiUser size={20} />;
-      case "professional":
+      case "company":
         return <RiOrganizationChart size={20} />;
-    
     }
   };
 
@@ -304,8 +296,10 @@ const ChatPage = ({ chatData, setSelected, refetch }) => {
 
   const upload = async (data) => {
     setUploading(true);
-    const url = await fetchApi("uploader", data, "post-imgUpload").then((res) => {
+    const url = await fetchApi("image/uploader", data, "post-imgUpload").then((res) => {
       if (res?.status_code === 200) {
+        console.log(res);
+         
         setUploading(false);
         return res?.link;
       } else {
@@ -379,7 +373,7 @@ const ChatPage = ({ chatData, setSelected, refetch }) => {
               target="_blank"
               className="absolute flex items-center gap-2 top-3 right-16 p-2 rounded-md text-white bg-blue-700 hover:bg-blue-800 transition-color duration-300 ease-in-out text-sm"
             >
-               dowanload picture <FiDownload size={16} className="flex flex-shrink-0" />
+              dowanload picture <FiDownload size={16} className="flex flex-shrink-0" />
             </Link>
           </div>
         </div>
@@ -432,18 +426,16 @@ const ChatPage = ({ chatData, setSelected, refetch }) => {
             <FiLoader size={20} className="text-white flex flex-shrink-0 animate-spin" />
           )}
         </label>
-          <button
-            className="flex items-center justify-center cursor-pointer py-2 px-3 bg-blue-700 hover:bg-blue-800 transition-color duration-300 ease-in-out h-12 rounded-md"
-            onClick={() => {
-              handleSend("txt", value);
-            }}
-            disabled={loading}
-          >
-            {!loading && <FiSend size={20} className="text-white flex flex-shrink-0" />}
-            {loading && (
-              <FiLoader size={20} className="animate-spin text-white flex flex-shrink-0" />
-            )}
-          </button>
+        <button
+          className="flex items-center justify-center cursor-pointer py-2 px-3 bg-blue-700 hover:bg-blue-800 transition-color duration-300 ease-in-out h-12 rounded-md"
+          onClick={() => {
+            handleSend("txt", value);
+          }}
+          disabled={loading}
+        >
+          {!loading && <FiSend size={20} className="text-white flex flex-shrink-0" />}
+          {loading && <FiLoader size={20} className="animate-spin text-white flex flex-shrink-0" />}
+        </button>
       </div>
     </div>
   );
@@ -452,9 +444,11 @@ const ChatPage = ({ chatData, setSelected, refetch }) => {
 // each ticke in the chat page of the selected chat with text and image type
 const Ticket = ({ message, setSelectedImage, senderName }) => {
   const { data, datetime, type, sender_type } = message;
-  const yearAndTime = datetime.split(" ");
-  const splitedTime = yearAndTime[1].split(".");
-  const houreAndMinute = splitedTime[0].split(":");
+  const yearAndTime = datetime?.split(" ");
+  const splitedTime = yearAndTime[1]?.split(".");
+  const houreAndMinute = splitedTime[0]?.split(":");
+  console.log(message);
+  
   return (
     <>
       {sender_type === "team" ? (
@@ -466,7 +460,12 @@ const Ticket = ({ message, setSelectedImage, senderName }) => {
                   .trim()
                   .split("\n")
                   .map((text, index) => (
-                    <span className="block text-wrap max-w-[200px] md:max-w-[350px] lg:max-w-[500px]" key={index}>{text}</span>
+                    <span
+                      className="block text-wrap max-w-[200px] md:max-w-[350px] lg:max-w-[500px]"
+                      key={index}
+                    >
+                      {text}
+                    </span>
                   ))}
               </p>
             )}
@@ -489,13 +488,18 @@ const Ticket = ({ message, setSelectedImage, senderName }) => {
       ) : (
         <div className="flex flex-col w-fit items-start  mr-auto mb-6">
           <div className="flex flex-wrap w-full mb-2">
-            {type === "txt" && (
+            {type === "support" && (
               <p className="break-words w-fit mr-auto text-base px-4 py-3 bg-white shadow-sm rounded-r-xl rounded-tl-xl rounded-bl-none">
                 {data
                   .trim()
                   .split("\n")
                   .map((text, index) => (
-                    <span className="block text-wrap max-w-[200px] md:max-w-[350px] lg:max-w-[500px]" key={index}>{text}</span>
+                    <span
+                      className="block text-wrap max-w-[200px] md:max-w-[350px] lg:max-w-[500px]"
+                      key={index}
+                    >
+                      {text}
+                    </span>
                   ))}
               </p>
             )}
@@ -516,10 +520,8 @@ const Ticket = ({ message, setSelectedImage, senderName }) => {
           </p>
         </div>
       )}
-      
     </>
   );
-  
 };
 
 export default Support;

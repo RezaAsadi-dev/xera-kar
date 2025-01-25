@@ -1,9 +1,10 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
-// export const mainAddress = "http://pl4ten:8000";
-export const mainAddress = "https://sinaback.liara.run";
-// export const mainAddress = `http://pc-2:3000`;
+// export const mainAddress = "http://DESKTOP-D852917:5000";
+// export const mainAddress = "https://sinaback.liara.run";
+export const mainAddress = `http://pl4ten:5000`;
+
 const pathName = window.location.pathname;
 
 export const fetchApi = async (url, body, type) => {

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import style from "./style.module.scss";
-import { FaCheck } from "react-icons/fa";
-import { AiFillStop } from "react-icons/ai";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
@@ -15,7 +13,7 @@ import { Button, Input } from "@nextui-org/react";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
 export default function EditCommentForm() {
-  const addProUrl = "v1/api/admin/agent/add";
+  const editUrl = "api/admin/update";
   const navigate = useNavigate();
   const [focus, setFocus] = useState({});
   const [errors, setErrors] = useState({});
@@ -81,7 +79,7 @@ export default function EditCommentForm() {
       console.log(data);
 
       fetchApi(
-        addProUrl,
+        editUrl,
         {
           userName: data.userName,  
           name: data.name,
@@ -92,14 +90,13 @@ export default function EditCommentForm() {
           gendder: data.gendder,
           dateTime: data.dateTime,
           status: data.status,
-       
         },
-        "post"
+        "put"
       ).then((res) => {
         //(res);
         if (res.status_code === 200) {
-          toast.success(" Professional registered successfully! ");
-          navigate("/professional/professionallist");
+          toast.success(" Comment edited successfully! ");
+          navigate("/comments");
         } else if (res.status_code === 401) {
           if (res.description === "unauthorized") {
             navigate("/login", { replace: true });

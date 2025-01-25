@@ -16,7 +16,7 @@ import Header from "./Header";
 function BusinessDetails() {
   const navigate = useNavigate();
   const dispatch1 = useDispatch();
-  const url = "v1/api/admin/user/fetch_one";
+  const url = "api/admin/fetch_one";
   const { id } = useParams();
   const [allData, setAllData] = useState([]);
   const [modals, setModals] = useState({
@@ -27,11 +27,10 @@ function BusinessDetails() {
 
   const fetchUser = () => {
     dispatch1(handler(true));
-    fetchApi(url, { id: id }, "post").then((res) => {
+    fetchApi(url, {collaction:"company", id: id }, "post").then((res) => {
       if (res?.status_code === 200) {
         dispatch1(handler(false));
-
-        setAllData(res?.data);
+        setAllData(res?.Data);
       } else {
         dispatch1(handler(false));
         toast.error("Something went wrong!");

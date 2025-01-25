@@ -19,28 +19,25 @@ import LengthNumber from "components/lengthNumber";
 import Options from "./components/options";
 import Countries from "assets/countries/countries.json";
 
-
 function Users() {
-  useEffect(() => {
-    accessPage();
-  }, []);
-  const dispatch1 = useDispatch();
-  const userurl = "v1/api/admin/user/fetch";
+  const userUrl = "/api/admin/fetch";
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState();
   const [number, setnumber] = useState();
   const [data, setData] = useState([]);
   const [haveFilter, setHaveFilter] = useState(false);
+  const dispatch1 = useDispatch();
   const [userStatus, setUserStatus] = useState(true);
-  const [openDeleteModal, setDeleteModal] = useState(false);
-
+  const [deleteModal, setDeleteModal] = useState(false);
   const [filters, setFilters] = useState({
     name: "",
+    phoneNumber: "",
     emailAddress: "",
     country: "",
     address: "",
     status: "",
+    dateTime: "",
   });
   const [enDatetime, setEnDatetime] = useState({
     start: "",
@@ -51,28 +48,49 @@ function Users() {
     to: "",
   });
 
-  const inputFields = [
-    { label: "Name", name: "fName", type: "text" },
-    { label: "Email Adress", name: "email", type: "text" },
-    {
-      label: "Country",
-      name: "country",
-      type: "select",
-      options: Countries.map((country) => ({ label: country.name, value: country.id })),
-    },
+  const timeHandler = (e, type) => {
+    const rightMonth = e.month.toString().padStart(2, "0");
+    const rightDay = e.day.toString().padStart(2, "0");
 
-    { label: "City", name: "city", type: "text" },
-    { label: "Address", name: "address", type: "text" },
-    {
-      label: "Status",
-      name: "status",
-      type: "select",
-      options: [
-        { label: "Active", value: "active" },
-        { label: "Deactive", value: "deactive" },
-      ],
-    },
-  ];
+    if (type === "from") {
+      setTime((prev) => ({
+        ...prev,
+        from: `${e.year}-${rightMonth}-${rightDay}`,
+      }));
+      setEnDatetime((prev) => ({
+        ...prev,
+        start: `${e.year}-${rightMonth}-${rightDay}`,
+      }));
+    } else if (type === "to") {
+      setTime((prev) => ({
+        ...prev,
+        to: `${e.year}-${rightMonth}-${rightDay}`,
+      }));
+      setEnDatetime((prev) => ({
+        ...prev,
+        end: `${e.year}-${rightMonth}-${rightDay}`,
+      }));
+    }
+  };
+
+  const queryHandler = () => {
+    const total = {};
+    if (filters.name) total["name"] = { $regex: filters.name };
+    if (filters.phoneNumber) total["phoneNumber"] = { $regex: filters.phoneNumber };
+    if (filters.email) total["email"] = { $regex: filters.email };
+    if (filters.country) total["country"] = { $regex: filters.country };
+    if (filters.city) total["city"] = { $regex: filters.city };
+    if (filters.address) total["address"] = { $regex: filters.address };
+    if (filters.status) total["status"] = filters.status === "active" ? true : false;
+
+    if (enDatetime.start && enDatetime.end) {
+      total["dateTime"] = {
+        $gt: enDatetime.start,
+        $lt: enDatetime.end,
+      };
+    }
+    return total;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -92,73 +110,90 @@ function Users() {
     }
   };
 
-  const timeHandler = (e, type) => {
-    const rightMonth = e.month.toString().padStart(2, "0");
-    const rightDay = e.day.toString().padStart(2, "0");
+  const inputFields = [
+    { label: "Name", name: "name", type: "text" },
+    { label: "phoneNumber", name: "phoneNumber", type: "text" },
+    { label: "Email Adress", name: "email", type: "text" },
+    {
+      label: "Country",
+      name: "country",
+      type: "select",
+      options: Countries.map((country) => ({ label: country.name, value: country.name })),
+    },
 
-    if (type === "birthFrom") {
-      setBirthTime((prev) => ({
-        ...prev,
-        from: `${e.year}-${rightMonth}-${rightDay}`,
-      }));
-      setBirthDatetime((prev) => ({
-        ...prev,
-        start: `${e.year}-${rightMonth}-${rightDay}`,
-      }));
-    } else if (type === "birthTo") {
-      setBirthTime((prev) => ({
-        ...prev,
-        to: `${e.year}-${rightMonth}-${rightDay}`,
-      }));
-      setBirthDatetime((prev) => ({
-        ...prev,
-        end: `${e.year}-${rightMonth}-${rightDay}`,
-      }));
-    } else {
-      if (type === "from") {
-        setTime((prev) => ({
-          ...prev,
-          from: `${e.year}-${rightMonth}-${rightDay}`,
-        }));
-        setEnDatetime((prev) => ({
-          ...prev,
-          start: `${e.year}-${rightMonth}-${rightDay}`,
-        }));
+    { label: "City", name: "city", type: "text" },
+    { label: "Address", name: "address", type: "text" },
+    {
+      label: "Status",
+      name: "status",
+      type: "select",
+      options: [
+        { label: "Active", value: "active" },
+        { label: "Deactive", value: "deactive" },
+      ],
+    },
+  ];
+
+  const fetchUsers = () => {
+    dispatch1(handler(true));
+    fetchApi(
+      userUrl,
+      {
+        collaction: "user",
+        page: currentPage,
+        query: {},
+      },
+      "post"
+    ).then((res) => {
+      if (res?.status_code === 200) {
+        dispatch1(handler(false));
+        setData(res?.data);
+        setTotalPages(res?.max_page);
+        setnumber(res?.count);
+        setHaveFilter(true);
       } else {
-        setTime((prev) => ({
-          ...prev,
-          to: `${e.year}-${rightMonth}-${rightDay}`,
-        }));
-        setEnDatetime((prev) => ({
-          ...prev,
-          end: `${e.year}-${rightMonth}-${rightDay}`,
-        }));
+        dispatch1(handler(false));
+        toast.error("Something went wrong!");
       }
-    }
+    });
   };
 
-  const queryHandler = () => {
-    const total = {};
-    if (filters.fName) total["fName"] = { $regex: filters.fName };
-    if (filters.email) total["email"] = { $regex: filters.email };
-    if (filters.province) total["province"] = { $regex: filters.province };
-    if (filters.phoneNumber) total["phoneNumber"] = { $regex: filters.phoneNumber };
-
-    if (enDatetime.start && enDatetime.end) {
-      total["dateTime"] = {
-        $gt: enDatetime.start,
-        $lt: enDatetime.end,
-      };
+  const filterFetch = () => {
+    if (Object.keys(queryHandler()).length > 0) {
+      dispatch1(handler(true));
+      fetchApi(
+        userUrl,
+        {
+          collaction: "user",
+          page: currentPage,
+          query: queryHandler(),
+        },
+        "post"
+      ).then((res) => {
+        if (res?.status_code === 200) {
+          dispatch1(handler(false));
+          setData(res?.data);
+          setTotalPages(res?.max_page);
+          setnumber(res?.count);
+          setHaveFilter(true);
+        } else {
+          dispatch1(handler(false));
+          toast.error("Something went wrong!");
+        }
+      });
+    } else {
+      toast.error("No value entered for filter ");
     }
-    return total;
   };
-
   const handleReset = () => {
     setFilters({
       name: "",
+      phoneNumber: "",
       email: "",
       country: "",
-      Address: "",
+      city: "",
+      address: "",
+      status: "",
     });
     setTime({
       from: "",
@@ -171,49 +206,6 @@ function Users() {
 
     fetchUsers();
     setHaveFilter(false);
-  };
-
-  const fetchUsers = () => {
-    dispatch1(handler(true));
-    fetchApi(userurl, { page: currentPage }, "post").then((res) => {
-      if (res?.status_code === 200) {
-        dispatch1(handler(false));
-        setData(res?.data);
-        setnumber(res?.count);
-        setTotalPages(res?.max_page);
-      } else {
-        dispatch1(handler(false));
-        toast.error("  Something went wrong!");
-      }
-    });
-  };
-
-  const filterFetch = () => {
-    if (Object.keys(queryHandler()).length > 0) {
-      dispatch1(handler(true));
-      fetchApi(
-        userurl,
-        {
-          page: currentPage,
-          query: queryHandler(),
-        },
-        "post"
-      ).then((res) => {
-        if (res?.status_code === 200) {
-          dispatch1(handler(false));
-          setData(res?.data);
-          setTotalPages(res?.max_page);
-          setnumber(res?.count);
-
-          setHaveFilter(true);
-        } else {
-          dispatch1(handler(false));
-          toast.error("Something went wrong!");
-        }
-      });
-    } else {
-      toast.error("No value entered for filter ");
-    }
   };
 
   const handlePageChange = (pageNumber) => {
@@ -275,7 +267,7 @@ function Users() {
             ))}
 
             <div className={styles.filterFiled}>
-              <label htmlFor="joinDateTo"> DateTime from: : </label>
+              <label htmlFor="joinDateTo"> DateTime from: </label>
               <DatePicker
                 showOtherDays
                 calendarPosition="top-right"
@@ -291,7 +283,7 @@ function Users() {
               />
             </div>
             <div className={styles.filterFiled}>
-              <label htmlFor="dateTime"> DateTime to: : </label>
+              <label htmlFor="dateTime"> DateTime to:</label>
               <DatePicker
                 showOtherDays
                 calendarPosition="top-right"
@@ -370,26 +362,26 @@ function Users() {
                       {data?.map((item, index) => (
                         <tr key={index}>
                           <td>{(currentPage - 1) * 12 + index + 1}</td>
-                          <td>Arat</td>
-                          <td>+99999999</td>
+                          <td>{item.name}</td>
+                          <td>{item.phoneNumber}</td>
                           <td>{item.email}</td>
-                          <td>England</td>
-                          <td>Dubai</td>
-                          <td>Dubai</td>
+                          <td>{item.country}</td>
+                          <td>{item.city}</td>
+                          <td>{item.address}</td>
                           <td>{item.dateTime.slice(0, 10)}</td>
                           <td>{item.status ? "Active" : "Deactive"}</td>
                           <td className={`${style.userDetail} flex flex-col items-center gap-2`}>
                             <Options
+                              data={item}
+                              status={item.status}
+                              id={item._id}
                               openModal={setDeleteModal}
                               onClick={() => {
-                                setUserId(_id);
-                                setUserStatus(item.status);
+                                setUserId(item._id);
+                                setUserStatus(item.status ? deactive : active);
                               }}
                               userId={item._id}
-                              status={item.status}
-                              phoneNumber={item.phoneNumber}
-                              fName={item.fName}
-                              lName={item.lName}
+                              refetch={fetchUsers}
                             />
                           </td>
                         </tr>

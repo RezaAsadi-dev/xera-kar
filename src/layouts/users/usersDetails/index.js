@@ -12,13 +12,12 @@ import { handler } from "../../../redux/loaderSlice";
 import Infos from "./components/info";
 import EditModal from "./components/editModal";
 import accessPage from "helper/functios";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Card from "@mui/material/Card";
 
 function UsersDetails() {
   const navigate = useNavigate();
   const dispatch1 = useDispatch();
-  const url = "v1/api/admin/user/fetch_one";
+  const url = "api/admin/fetch_one";
   const { id } = useParams();
   const [allData, setAllData] = useState([]);
   const [modals, setModals] = useState({
@@ -27,24 +26,37 @@ function UsersDetails() {
 
   const fetchUser = () => {
     dispatch1(handler(true));
-    fetchApi(url, { id: id }, "post").then((res) => {
+    fetchApi(url,{
+       collaction:"user",
+       id: id ,
+      },
+       "post"
+      ).then((res) => {
       if (res?.status_code === 200) {
-        dispatch1(handler(false));
-
-        setAllData(res?.data);
-      } else {
-        dispatch1(handler(false));
+        setAllData(res?.Data);
+      }
+      else{
         toast.error("Something went wrong!");
       }
+    })
+    .catch(() => {
+      toast.error("Failed to fetch user data.");
+    })
+    .finally(() => {
+      dispatch1(handler(false));
     });
-  };
+};
+  
   useEffect(() => {
     fetchUser();
-    console.log(allData);
     if (accessPage("Users")) {
       navigate("/inaccessibility");
     }
   }, []);
+
+  useEffect(() => {
+    console.log(allData);
+  }, [allData]);
 
   return (
     <DashboardLayout>

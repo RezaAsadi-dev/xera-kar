@@ -14,7 +14,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 function CommentsDetails() {
   const navigate = useNavigate();
   const dispatch1 = useDispatch();
-  const url = "v1/api/admin/user/fetch_one";
+  const url = "api/admin/fetch_one";
   const { id } = useParams();
   const [allData, setAllData] = useState([]);
    const [modals, setModals] = useState({

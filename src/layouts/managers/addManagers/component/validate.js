@@ -9,10 +9,10 @@ const validate = (data) => {
   }
 
 // Validate Phone
-  if (!data.phone) {
-    errors.phone = "Phone number is required";
-  } else if (data.phone.length !== 11) {
-    errors.phone = "Phone number must be exactly 11 digits";
+  if (!data.phoneNumber) {
+    errors.phoneNumber = "Phone number is required";
+  } else if (data.phoneNumber.length !== 11) {
+    errors.phoneNumber = "Phone number must be exactly 11 digits";
   }
 
   // Validate Email

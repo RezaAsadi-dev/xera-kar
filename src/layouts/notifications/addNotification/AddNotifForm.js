@@ -23,9 +23,8 @@ import { styled } from "@mui/material";
 import { red, indigo } from "@mui/material/colors";
 
 const AddNotifForm = ({ type }) => {
-  const userListUrl = "v1/api/admin/notification/add_notification";
+  const ListUrl = "api/admin/fetch";
   // const userListUrl = "v1/api/admin/user/fetch";
-  const professionalListUrl = "v1/api/admin/company/fetch";
   const [user, setUser] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [toggleProfiles, setToggleProfiles] = useState(false);
@@ -47,12 +46,7 @@ const AddNotifForm = ({ type }) => {
   const location = useLocation();
   const dropdownRef = useRef(null);
 
-  const notifType =
-    type === "USER"
-      ? "user"
-      : "PROFESSIONALS";
-      
-      
+  const notifType = type === "USER" ? "user" : "professional";
 
   const RedButton = styled(Button)(({ theme }) => ({
     backgroundColor: red["300"],
@@ -112,19 +106,41 @@ const AddNotifForm = ({ type }) => {
         time: { ...prevTime, from: `${e.year}-${rightMonth}-${rightDay}` },
       });
     }
-    
   };
 
   //access to use list
   const usersList = async () => {
-    const getNotifUrl =
-     type === "user"
-        ? userListUrl
-        : professionalListUrl;
     dispatch(handler(true));
-    const response = await fetchApi(getNotifUrl, { page: currentPage }, "post");
+    console.log(type);
+    
+    const response = await fetchApi(
+      ListUrl,
+      { collaction: type, query: queryHandler(), page: currentPage },
+      "post"
+    );
     dispatch(handler(false));
     if (response.status_code === 200) {
+      // console.log(response);
+      
+      setUser(response);
+    } else if (response.status_code === 401 && response.description === "unauthorized") {
+      navigate("/login", { replace: true });
+    } else {
+      toast.error(" Something went wrong! ");
+    }
+  };
+  const professinalList = async () => {
+    dispatch(handler(true));
+    
+    const response = await fetchApi(
+      ListUrl,
+      { collaction: "company", query: {type:type}, page: currentPage },
+      "post"
+    );
+    dispatch(handler(false));
+    if (response.status_code === 200) {
+      // console.log(response);
+      
       setUser(response);
     } else if (response.status_code === 401 && response.description === "unauthorized") {
       navigate("/login", { replace: true });
@@ -150,7 +166,7 @@ const AddNotifForm = ({ type }) => {
       };
 
       const response = await fetchApi(
-        "v1/api/admin/notification/add_notification",
+        "api/admin/add",
         {
           target: type,
           time: data.time,
@@ -160,6 +176,8 @@ const AddNotifForm = ({ type }) => {
           txt: data.text,
           title: data.title,
           type: data.type,
+          collaction: "notification",
+          readed:false
         },
         "post"
       );
@@ -187,25 +205,15 @@ const AddNotifForm = ({ type }) => {
   };
 
   useEffect(() => {
-    usersList();
+    
+    if(type==="user"){
+      usersList();
+    }else{
+      professinalList()
+    }
+    
   }, [currentPage]);
 
-
-  useEffect(() => {
-    const getNotifUrl =
-      type === "user"
-        ? userListUrl
-        : professionalListUrl;
-    fetchApi(getNotifUrl, { query: queryHandler(), page: currentPage }, "post").then((res) => {
-      if (res.status_code === 200) {
-        setUser(res);
-      } else if (res.status_code === 401 && res.description === "unauthorized") {
-        navigate("/login", { replace: true });
-      } else {
-        toast.error(" Something went wrong!");
-      }
-    });
-  }, [searchValue, currentPage]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -216,11 +224,10 @@ const AddNotifForm = ({ type }) => {
   // useEffect(() => {
   //   console.log(errors)
   // }, [errors]);
-
   return (
     <div className={style.addContainer}>
       <form className={style.contantAddForm} onSubmit={handleSubmit}>
-        {["title","date" ,"type" , "recievers", "text"].map((field) => (
+        {["title", "date", "type", "recievers", "text"].map((field) => (
           <div
             className={`${style.formItem} ${field == "recievers" && style.recieverItem}`}
             key={field}
@@ -228,7 +235,7 @@ const AddNotifForm = ({ type }) => {
             {field === "date" ? (
               <div className="flex gap-4">
                 <div className={style.notifInput}>
-                  <label htmlFor={field}>  from :</label>
+                  <label htmlFor={field}> from :</label>
                   <DatePicker
                     placeholder="yyy/mm/dd"
                     showOtherDays
@@ -258,7 +265,7 @@ const AddNotifForm = ({ type }) => {
                   color="primary"
                   css={{
                     ".nextui-radio-label": {
-                      fontSize: "10px", 
+                      fontSize: "10px",
                     },
                   }}
                   onChange={(e) => setData({ ...data, type: e.target.value })}
@@ -271,7 +278,7 @@ const AddNotifForm = ({ type }) => {
               <>
                 <div className={style.recievers}>
                   <label htmlFor={field}> Receiver :</label>
-                  
+
                   <input
                     className={`${style.inputField} "mr-[10px]" ${
                       errors[field] && focus[field] ? style.uncompleted : ""
@@ -310,28 +317,12 @@ const AddNotifForm = ({ type }) => {
                               <ListboxItem
                                 key={item._id}
                                 onClick={() => {
-                                  setChosenProfile(
-                                    notifType === "CO"
-                                      ? item.username
-                                      : notifType === "ADVISER"
-                                      ? item.username
-                                      : notifType === "AGENT"
-                                      ? item.username
-                                      : item.fName + " " + item.lName
-                                  );
+                                  setChosenProfile(item.name);
                                   setData({ ...data, choosenUserId: item._id });
                                   setToggleProfiles(!toggleProfiles);
                                 }}
                               >
-                                {index +
-                                  (currentPage - 1) * 12 +
-                                  1 +
-                                  "-  " +
-                                  (notifType === "USER"
-                                    ? item.username
-                                    : notifType === "PROFESSIONAL"
-                                    ? item.username
-                                    : item.fName + " " + item.lName)}
+                                {index + (currentPage - 1) * 12 + 1 + "-  " + item.name}
                               </ListboxItem>
                             ))
                           ) : (
@@ -379,7 +370,7 @@ const AddNotifForm = ({ type }) => {
                 />
               </div>
             ) : field === "text" ? (
-              <div className={`${style.itemContainer}  ` }>
+              <div className={`${style.itemContainer}  `}>
                 <Textarea
                   variant="faded"
                   label=" Massage "

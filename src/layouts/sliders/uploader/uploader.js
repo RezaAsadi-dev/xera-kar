@@ -7,7 +7,7 @@ import UploadIcon from "./uploaderIcon";
 
 const FileUploader = ({ onChange }) => {
   const [previewImage, setPreviewImage] = useState(null);
-  const url = "api/user/home/uploader";
+  const url = "image/uploader";
 
   const handleFileChange = async (e) => {
     const file = await e.target.files[0];

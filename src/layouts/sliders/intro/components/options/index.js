@@ -12,6 +12,7 @@ import accessPage from "helper/functios";
 import toast from "react-hot-toast";
 import { VscCompassActive } from "react-icons/vsc";
 import { FiInfo } from "react-icons/fi";
+import { fetchApi } from "api";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -53,7 +54,6 @@ const StyledMenu = styled((props) => (
 export default function Options({ openModal, refetch, onClick, phoneNumber, userId, status }) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
-
   const open = Boolean(anchorEl);
   const handleClick = (event, type, id) => {
     setAnchorEl(event.currentTarget);
@@ -62,6 +62,7 @@ export default function Options({ openModal, refetch, onClick, phoneNumber, user
     } else if (type === "disable") {
       const result = openHandler("disable");
       if (result) {
+        submit();
         openModal(true);
         setAnchorEl(null);
       }
@@ -82,21 +83,22 @@ export default function Options({ openModal, refetch, onClick, phoneNumber, user
       return false;
     } else return true;
   };
+  const disableOrganUrl = "api/admin/update";
   const submit = () => {
-    fetchApi(disableOrganUrl, { id, status: !status }, "put").then((res) => {
-      if (res?.status_code === 200) {
-        if (status) {
-          toast.success(" User deactivated successfully! ");
+    fetchApi(disableOrganUrl, { collaction: "adv", id: userId, status: !status }, "put").then(
+      (res) => {
+        if (res?.status_code === 200) {
+          if (status) {
+            toast.success(" Intro deactivated successfully! ");
+          } else {
+            toast.success(" Intro activated successfully! ");
+          }
+          refetch();
         } else {
-          toast.success(" User activated successfully! ");
+          toast.error(" Something went wrong !");
         }
-
-        refetch();
-      } else {
-        dispatch1(handler(false));
-        toast.error(" Something went wrong !");
       }
-    });
+    );
   };
 
   return (
@@ -140,7 +142,7 @@ export default function Options({ openModal, refetch, onClick, phoneNumber, user
           <EditIcon />
           Edit
         </MenuItem>
-     
+
         <MenuItem
           onClick={(e) => {
             handleClose();

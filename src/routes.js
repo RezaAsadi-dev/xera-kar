@@ -19,7 +19,8 @@ import Professionals from "layouts/professionals";
 import { FaUsersCog } from "react-icons/fa";
 import Category from "layouts/category";
 import { BiSolidCategoryAlt } from "react-icons/bi";
-import Requests from "layouts/requests";
+// import Requests from "layouts/Requests/index";
+import Requests from "./layouts/requests";
 import { FaCodePullRequest } from "react-icons/fa6";
 import Comments from "layouts/comments";
 import { FaComments } from "react-icons/fa";
@@ -43,9 +44,7 @@ import EditAdvisement from "layouts/sliders/advisement/editAdvisement/uploader";
 import EditPro from "layouts/professionals/editpro";
 import EditIntro from "layouts/sliders/intro/editIntro";
 import IntroDetails from "layouts/sliders/intro/introDetails";
-import EditRequest from "layouts/requests/editrequest/editRequest";
 import ProDetails from "layouts/professionals/proDetails";
-import RequestDetail from "layouts/requests/reqdetail";
 import Business from "layouts/business";
 import { FaBusinessTime , FaCity  } from "react-icons/fa";
 import AddBusiness from "layouts/business/addBusiness";
@@ -56,6 +55,11 @@ import AddCity from "layouts/city/addcity";
 import EditCity from "layouts/city/editcity";
 import UserNotif from "layouts/notifications/UserNotifications";
 import ProNotif from "layouts/notifications/ProfessionalNotifications";
+// import EditRequest from "layouts/Requests/editrequest/editRequest";
+import EditRequest from "./layouts/requests/editrequest/editRequest";
+import RequestDetail from "./layouts/requests/reqdetail";
+import CompanyDetail from "layouts/company/companyDetails";
+// import RequestDetail from "layouts/Requests/reqdetail";
 
 
 const routes = [
@@ -195,7 +199,7 @@ const routes = [
         type: "sub",
         name: "UsersNotif",
         key: "users",
-        route: "/notifications/users",
+        route: "/notifications/user",
         icon: <FaUsers size="20px" />,
         component: <FetchNotif />,
         noCollapse: true,
@@ -205,7 +209,7 @@ const routes = [
         type: "sub",
         name: "ProfessionalsNotif",
         key: "professionals",
-        route: "/notifications/professionals",
+        route: "/notifications/professional",
         icon: <FaUsers size="20px" />,
         component: <FetchNotif />,
         noCollapse: true,
@@ -397,6 +401,16 @@ const routes = [
     route: "/professionals/professionaldetails/:id",
     icon: <FaUsersCog size="20px" />,
     component: <ProDetails />,
+    noCollapse: true,
+    show: true,
+  },
+  {
+    type: "",
+    name: "Company Details ",
+    key: "copmanydetails ",
+    route: "/companydetails/:id",
+    icon: <FaUsersCog size="20px" />,
+    component: <CompanyDetail />,
     noCollapse: true,
     show: true,
   },
@@ -646,7 +660,7 @@ const routes = [
   {
     name: "Users Notification",
     key: "user",
-    route: "/notifications/users",
+    route: "/notifications/user",
     icon: <FaUsers size="20px" />,
     component: <UserNotif />,
     noCollapse: true,
@@ -655,7 +669,7 @@ const routes = [
   {
     name: "Professionals Notification",
     key: "professional",
-    route: "/notifications/professionals",
+    route: "/notifications/professional",
     icon: <FaUsers size="20px" />,
     component: <ProNotif />,
     noCollapse: true,

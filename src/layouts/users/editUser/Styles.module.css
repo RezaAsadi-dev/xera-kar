@@ -1,0 +1,25 @@
+/* YourStyles.module.css */
+.formItem {
+    margin: 16px 0;
+  }
+  
+  .label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+  }
+  
+  .phoneInput {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    outline: none
+  }
+  
+  .error {
+    color: red;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+  

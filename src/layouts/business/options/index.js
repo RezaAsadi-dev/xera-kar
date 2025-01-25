@@ -50,10 +50,10 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function Options({ openModal, refetch, phoneNumber, id: userId, status }) {
+export default function Options({ openModal, refetch, id: userId, status }) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const disableOrganUrl = "api/admin/update";
   const open = Boolean(anchorEl);
   const handleClick = (event, type, id) => {
     setAnchorEl(event.currentTarget);
@@ -64,13 +64,12 @@ export default function Options({ openModal, refetch, phoneNumber, id: userId, s
       if (result) {
         openModal(true);
         setAnchorEl(null);
+        submit();
       }
     } else if (type === "detail") {
       navigate(`/business/businessdetails/${id}`);
     }
   };
-      
-  
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -84,20 +83,22 @@ export default function Options({ openModal, refetch, phoneNumber, id: userId, s
     } else return true;
   };
   const submit = () => {
-    fetchApi(disableOrganUrl, { id: userId, status: !status}, "put").then((res) => {
-      if (res?.status_code === 200) {
-        if (status) {
-          toast.success(" Business deactivated successfully! ");
-        } else {
-          toast.success(" Business activated successfully! ");
-        }
+    fetchApi(disableOrganUrl, { collaction: "company", id: userId, status: !status }, "put").then(
+      (res) => {
+        if (res?.status_code === 200) {
+          if (status) {
+            toast.success(" Business deactivated successfully! ");
+          } else {
+            toast.success(" Business activated successfully! ");
+          }
 
-        refetch();
-      } else {
-        dispatch1(handler(false));
-        toast.error(" Something went wrong !");
+          refetch();
+        } else {
+          dispatch1(handler(false));
+          toast.error(" Something went wrong !");
+        }
       }
-    });
+    );
   };
 
   return (

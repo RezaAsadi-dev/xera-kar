@@ -17,8 +17,8 @@ import { Input, Checkbox } from "@nextui-org/react";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
 const EditManagersForm = () => {
-  const operatorFetchUrl = "v1/api/admin/operator/fetch_one";
-  const operatorUpdateUrl = "v1/api/admin/operator/update";
+  const operatorFetchUrl = "api/admin/fetch_one";
+  const operatorUpdateUrl = "api/admin/update";
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -38,7 +38,7 @@ const EditManagersForm = () => {
   const [data, setData] = useState({
     user: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
     newPassword: "",
     repeatNewPassword: "",
   });
@@ -50,16 +50,21 @@ const EditManagersForm = () => {
 
   useEffect(() => {
     const fetchOperator = async () => {
-      const response = await fetchApi(operatorFetchUrl, { id: id }, "post");
+      const response = await fetchApi(
+        operatorFetchUrl,
+        { collaction: "admin", query: { type: "operator" }, id: id },
+        "post"
+      );
       if (response.status_code === 200) {
-        const operator = response.data.find((op) => op._id === id);
+        const operator = response.Data.find((op) => op._id === id);
         if (operator) {
           setData({
-            user: operator.user,
-            name: operator.name,
-            phone: operator.phone,
+            user: operator?.user,
+            name: operator?.name,
+            email: operator?.email,
+            phoneNumber: operator?.phoneNumber,
           });
-          // setRoles(operator.access);
+          setRoles(operator?.access);
         }
       } else if (response.status_code === 401) {
         navigate("/login", { replace: true });
@@ -94,7 +99,7 @@ const EditManagersForm = () => {
   };
 
   const prepareDataToSend = () => {
-    let dataToSend = { ...data };
+    let dataToSend = { ...data, collaction: "admin", query: { type: "operator" }, id: id };
 
     if (checkBox) {
       if (data.newPassword !== data.repeatNewPassword) {
@@ -173,30 +178,30 @@ const EditManagersForm = () => {
             <Input
               color="light"
               type="text"
-              name="user"
+              name="email"
               onFocus={handleFocus}
               onChange={handleInputChange}
               classNames={{ input: ["text-[14px]"] }}
               variant="bordered"
               labelPlacement="outside"
               label="Email"
-              value={data.user}
-              isInvalid={errors.user && focus.user}
+              value={data.email}
+              isInvalid={errors.email && focus.email}
             />
           </div>
           <div className={style.formItem}>
             <Input
               color="light"
               type="text"
-              name="phone"
+              name="phoneNumber"
               onFocus={handleFocus}
               onChange={handleInputChange}
               classNames={{ input: ["text-[14px]"] }}
               variant="bordered"
               labelPlacement="outside"
               label="Phone number "
-              value={data.phone}
-              isInvalid={errors.phone && focus.phone}
+              value={data.phoneNumber}
+              isInvalid={errors.phoneNumber && focus.phoneNumber}
             />
           </div>
           <div className="flex justify-start w-full  text-[12px] sm:flex flex-col">

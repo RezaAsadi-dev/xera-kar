@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import style from "./style.module.scss";
 import Stack from "@mui/material/Stack";
 import validate from "./validate";
 import { fetchApi } from "api";
 import { Button, Input, Textarea } from "@nextui-org/react";
 import FileUploader from "components/fileuploader/uploader";
+import { IoCloseCircleOutline } from "react-icons/io5";
 
 export default function EditIntroForm() {
-  const addProUrl = "v1/api/admin/agent/add";
+  const editIntroUrl = "api/admin/update";
   const navigate = useNavigate();
   const [focus, setFocus] = useState({});
   const [errors, setErrors] = useState({});
@@ -18,7 +19,8 @@ export default function EditIntroForm() {
     Description: "",
     img: "",
   });
-
+  const { id } = useParams();
+  const [edit, setEdit] = useState(false);
 
   const deleteHandler = () => {
     navigate("/slider/intro", { replace: true });
@@ -41,18 +43,19 @@ export default function EditIntroForm() {
   };
 
   const submitHandler = (event) => {
-    event.preventDefault();
-    if (!Object.keys(errors).length) {
-      console.log(data);
-
+    console.log(!!Object.keys(errors).length);
+    console.log(Object.keys(errors).length);
+    if (!!Object.keys(errors).length) {
       fetchApi(
-        addProUrl,
+        editIntroUrl,
         {
-          username: data.username,
-          link: data.link,
+          title: data.title,
           Description: data.Description,
+          img: data.img,
+          id: data._id,
+          collaction: "adv",
         },
-        "post"
+        "put"
       ).then((res) => {
         //(res);
         if (res.status_code === 200) {
@@ -74,10 +77,18 @@ export default function EditIntroForm() {
       });
     }
   };
+  const urlOne = "api/admin/fetch_one";
+  const fetchone = () => {
+    fetchApi(urlOne, { collaction: "adv", id: id }, "post").then((res) => {
+      setData(res.Data[0]);
+      setEdit(!!res.Data[0].img);
+    });
+  };
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    fetchone();
+  }, []);
+  console.log(data);
   return (
     <>
       <div className={style.addContainer}>
@@ -87,7 +98,8 @@ export default function EditIntroForm() {
               <Input
                 color="light"
                 type="text"
-                name="username"
+                name="title"
+                value={data.title}
                 onFocus={focusHandler}
                 onChange={changeHandler}
                 classNames={{
@@ -103,7 +115,8 @@ export default function EditIntroForm() {
             <div className="mt-4">
               <Textarea
                 variant="bordered"
-                color=""
+                name="Description"
+                value={data.Description}
                 label="Description"
                 labelPlacement="outside"
                 placeholder="Enter your description"
@@ -111,10 +124,20 @@ export default function EditIntroForm() {
               />
             </div>
           </div>
-
-          <div className={`w-1/3 relative`}>
-            <FileUploader />
-          </div>
+          {edit ? (
+            <div className={`w-1/3 relative`}>
+              <img className="rounded-lg" src={data.img} alt={data.title} />
+              <div className="mt-3">
+                <Button color="danger" onClick={() => setEdit(!edit)}>
+                  Edit
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className={`w-1/3 relative`}>
+              <FileUploader setData={setData} />
+            </div>
+          )}
         </form>
 
         <Stack

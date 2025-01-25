@@ -9,6 +9,7 @@ import { IoEye } from "react-icons/io5";
 import { Link, useLocation } from "react-router-dom";
 
 import { Check, CheckCheck } from "lucide-react";
+import { truncateString } from "helper/functios";
 
 const PrivateMessages = ({ onReadClick, Notifications, loading, pages, setPages }) => {
   const location = useLocation();
@@ -17,6 +18,8 @@ const PrivateMessages = ({ onReadClick, Notifications, loading, pages, setPages 
     setPages({ ...pages, private: page });
   }, [page, location]);
 
+  console.log(Notifications?.data.target);
+  
   return (
     <div className="pt-6">
       <TableC
@@ -28,24 +31,36 @@ const PrivateMessages = ({ onReadClick, Notifications, loading, pages, setPages 
             <TableRow key={index}>
               <TableCell>{(page - 1) * 12 + index + 1}</TableCell>
               <TableCell>{notif.title}</TableCell>
-              <TableCell>{notif.txt}</TableCell>
+              <TableCell>{ truncateString(notif.txt,100) }</TableCell>
               <TableCell>
                 <div className="flex">
-                  {notif.time.from} {notif.time.to && `to`}{" "}
+                  {notif.time.from}  {notif.time.to && `to`}
                   {notif.time.to && (
-                    <sapn className="flex flex-row-reverse w-fit mr-1">{notif.time.to}</sapn>
+                    <sapn className="flex flex-row-reverse w-fit mx-2">{notif.time.to}</sapn>
                   )}
                 </div>
               </TableCell>
               <TableCell>
-                <Link
-                  to={`/users/usersDetails/${notif.userid}`}
-                  color="primary"
-                  style={{ fontSize: "20px" }}
-                >
-                  {" "}
-                  <IoEye />
-                </Link>
+                {
+                  notif?.target==="professional" ? ( <Link
+                    // to={`/users/usersDetails/${notif.userid}`}
+                    to={`/professionals/professionaldetails/${notif.userid}`}
+                    color="primary"
+                    style={{ fontSize: "20px" }}
+                  >
+                    {" "}
+                    <IoEye />
+                  </Link>):(<Link
+                    // to={`/users/usersDetails/${notif.userid}`}
+                    to={`/users/usersDetails/${notif.userid}`}
+                    color="primary"
+                    style={{ fontSize: "20px" }}
+                  >
+                    {" "}
+                    <IoEye />
+                  </Link>)
+                }
+               
               </TableCell>
               <TableCell>
                 {notif.readed ? (

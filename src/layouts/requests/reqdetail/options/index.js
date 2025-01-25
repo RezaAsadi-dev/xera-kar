@@ -13,9 +13,9 @@ import { GiConfirmed } from "react-icons/gi";
 import { PiClockAfternoonBold } from "react-icons/pi";
 import { SiNorton } from "react-icons/si";
 import { TbXboxX } from "react-icons/tb";
-
-
-
+import { fetchApi } from "api";
+import { useDispatch } from "react-redux";
+import {handler} from "../../../../redux/loaderSlice"
 const StyledMenu = styled((props) => (
   <Menu
     elevation={0}
@@ -53,49 +53,38 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function Options({ userId, status}) {
-
+export default function Options({ userId, status }) {
+  const updateUrl = "api/admin/update";
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const dispatch1 = useDispatch();
   const open = Boolean(anchorEl);
-  const handleClick = (event, type, id) => {
+  const openOption=(event)=>{
     setAnchorEl(event.currentTarget);
-    if (type === "detail") {
-      navigate(`/requests/requestsDetails/${id}`);
-    } else if (type === "edit") {
-      navigate(`/requests/editrequest/${id}`);
-      }
-    }
-  
+  }
+  const handleClick = (event, type) => {
+    // console.log(userId);
+    submit(type);
+
+    
+  };
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const openHandler = (type) => {
-    if (accessPage("Requests", type)) {
-      toast.error(" inaccessibility ");
-      handleClose();
-      return false
-    }
-    else return true
-  };
-
-  const submit = () => {
-    fetchApi(disableOrganUrl, { id: userId, status: !status}, "put").then((res) => {
-      if (res?.status_code === 200) {
-        if (status) {
-          toast.success(" Request deactivated successfully! ");
+  const submit = (type) => {
+    fetchApi(updateUrl, { collaction: "response", id: userId, workingStatus: type }, "put").then(
+      (res) => {
+        if (res?.status_code === 200) {
+          console.log(res);     
+          navigate(0)
+            toast.success(" Request deactivated successfully! ");
+          
         } else {
-          toast.success(" Request activated successfully! ");
+          dispatch1(handler(false));
+          toast.error(" Something went wrong !");
         }
-
-        refetch();
-      } else {
-        dispatch1(handler(false));
-        toast.error(" Something went wrong !");
       }
-    });
+    );
   };
 
   return (
@@ -106,7 +95,7 @@ export default function Options({ userId, status}) {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         disableElevation
-        onClick={handleClick}
+        onClick={openOption}
       >
         <GrSettingsOption size={20} color="rgb(66, 73, 85)" />
       </Button>
@@ -122,7 +111,7 @@ export default function Options({ userId, status}) {
         <MenuItem
           onClick={(e) => {
             handleClose();
-            handleClick(e, status);
+            handleClick(e, "Assigned", status);
           }}
           disableRipple
         >
@@ -132,37 +121,37 @@ export default function Options({ userId, status}) {
         <MenuItem
           onClick={(e) => {
             handleClose();
-            handleClick(e, status);
+            handleClick(e, "pending", status);
           }}
           disableRipple
         >
-          <PiClockAfternoonBold  className="mr-[12px]" />
+          <PiClockAfternoonBold className="mr-[12px]" />
           Pending
         </MenuItem>
         <MenuItem
           onClick={(e) => {
             handleClose();
-            handleClick(e, status);
+            handleClick(e, "Confirmed", status);
           }}
           disableRipple
         >
-          <GiConfirmed className="mr-[12px]"/>
+          <GiConfirmed className="mr-[12px]" />
           Confirmed
         </MenuItem>
         <MenuItem
           onClick={(e) => {
             handleClose();
-            handleClick(e, status);
+            handleClick(e, "Accepted", status);
           }}
           disableRipple
         >
-          <SiNorton  className="mr-[12px]" />
+          <SiNorton className="mr-[12px]" />
           Accepted
         </MenuItem>
         <MenuItem
           onClick={(e) => {
             handleClose();
-            handleClick(e, status);
+            handleClick(e, "Rejected", status);
           }}
           disableRipple
         >

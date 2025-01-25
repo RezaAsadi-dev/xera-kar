@@ -7,7 +7,6 @@ import MenuItem from "@mui/material/MenuItem";
 import EditIcon from "@mui/icons-material/Edit";
 import { GrSettingsOption } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
-import { FiTrash2 } from "react-icons/fi";
 import accessPage from "helper/functios";
 import toast from "react-hot-toast";
 import { VscCompassActive } from "react-icons/vsc";
@@ -50,10 +49,10 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function Options({ openModal, refetch, phoneNumber, id: userId, status }) {
+export default function Options({ openModal, refetch, id: userId, status }) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const deleteUrl = "api/admin/delet"
   const open = Boolean(anchorEl);
   const handleClick = (event, type, id) => {
     setAnchorEl(event.currentTarget);
@@ -84,7 +83,7 @@ export default function Options({ openModal, refetch, phoneNumber, id: userId, s
     } else return true;
   };
   const submit = () => {
-    fetchApi(disableOrganUrl, { id: userId, status: !status}, "put").then((res) => {
+    fetchApi(deleteUrl, { id: userId, status: !status}, "put").then((res) => {
       if (res?.status_code === 200) {
         if (status) {
           toast.success(" Professional deactivated successfully! ");

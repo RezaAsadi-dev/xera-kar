@@ -17,14 +17,14 @@ import { Input } from "@nextui-org/react";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
 const AddManagersForm = () => {
-  const operatorAddUrl = "v1/api/admin/operator/add";
+  const operatorAddUrl = "api/admin/add";
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [data, setData] = useState({
     user: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
     password: "",
     confirmpassword: "",
   });
@@ -83,7 +83,7 @@ const AddManagersForm = () => {
     e.preventDefault();
 
     const validationErrors = validate(data);
-    console.log(validationErrors)
+    console.log(validationErrors);
     console.log(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
       dispatch(handler(true));
@@ -92,10 +92,13 @@ const AddManagersForm = () => {
         {
           user: data.user,
           email: data.email,
-          phone: data.phone,
+          phoneNumber: data.phoneNumber,
           pass: data.password,
           access: roles,
           cat: "Public",
+          collaction: "admin",
+          type: "operator",
+          query: { type: "operator" },
         },
         "post"
       );
@@ -112,7 +115,7 @@ const AddManagersForm = () => {
       setFocus({
         user: true,
         email: true,
-        phone: true,
+        phoneNumber: true,
         password: true,
         confirmpassword: true,
       });
@@ -127,7 +130,7 @@ const AddManagersForm = () => {
         onSubmit={handleSubmit}
         autoComplete="off"
       >
-        {["user", "email", "phone", "password", "confirmpassword"].map((field) => (
+        {["user", "email", "phoneNumber", "password", "confirmpassword"].map((field) => (
           <div className=" my-[4px] nextuiInputs justify-items-start	" key={field}>
             <Input
               type={
@@ -167,7 +170,7 @@ const AddManagersForm = () => {
                   ? " User Name "
                   : field === "email"
                   ? " Email "
-                  : field === "phone"
+                  : field === "phoneNumber"
                   ? "Phone number "
                   : field === "password"
                   ? "Password"
@@ -188,7 +191,6 @@ const AddManagersForm = () => {
             <tr>
               <th>Section</th>
               <th> Accessibility </th>
-      
             </tr>
           </thead>
           <tbody>

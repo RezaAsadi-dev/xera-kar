@@ -1,55 +1,59 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import style from "./style.module.scss";
 import validate from "./validate";
 import { fetchApi } from "api";
 import { Button, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
 import countriesData from "assets/countries/countries.json";
 import { Card } from "@mui/material";
-
+import { useDispatch } from "react-redux";
+import { handler } from "../../../redux/loaderSlice";
+import { IoImageOutline } from "react-icons/io5";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import style1 from "./Styles.module.css";
 export default function EditBusinessForm() {
-  const addProUrl = "v1/api/admin/agent/add";
+  const editBusinessUrl = "api/admin/update";
+  const businessUrl = "api/admin/fetch_one";
+  const cityUrl = "api/admin/fetch";
+  const categoryUrl = "api/admin/fetch";
   const navigate = useNavigate();
+  const { id } = useParams();
   const [focus, setFocus] = useState({});
   const [errors, setErrors] = useState({});
-  const [data, setData] = useState({
-    coName: "",
-    phone: "",
-    email: "",
-    country: "",
-    coAddress: "",
-    services_products: "",
-    category: "",
-    subcategory: "",
-    yearOfExperience: "",
-    coWebsite: "",
-    description: "",
-    status: "",
-    images: [
-      { id: 1, url: "https://via.placeholder.com/150" },
-      { id: 2, url: "https://via.placeholder.com/150/0000FF" },
-      { id: 3, url: "https://via.placeholder.com/150/FF0000" },
-    ],
-    video: {
-      id: 1,
-      url: "https://www.w3schools.com/html/mov_bbb.mp4",
-    },
-  });
-
+  const [countrySelection, setCountrySelection] = useState();
+  const [category, setCategory] = useState();
+  const [subCategory, setSubCategory] = useState();
+  const dispatch1 = useDispatch();
+  const [data, setData] = useState({});
+  const [phone, setPhone] = useState("");
+  const [updateData, setUpdateData] = useState();
+  const [mediaItems, setMediaItems] = useState([]);
+  const [portfolioVideo, setPortfolioVideo] = useState("");
+  const [country, setCountry] = useState("US");
   const deleteHandler = () => {
     navigate("/business", { replace: true });
   };
 
-  useEffect(() => {
-    setErrors(validate(data));
-  }, [data, focus]);
+  // useEffect(() => {
+  //   setErrors(validate(data));
+  // }, [data, focus]);
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
+    console.log(name, "=>", value);
 
     setData({
       ...data,
+      [name]: value,
+    });
+    setUpdateData({
+      id,
+      collaction: "company",
+      portfolioImgs: mediaItems,
+      phoneNumber: phone,
+      ...updateData,
       [name]: value,
     });
   };
@@ -61,31 +65,13 @@ export default function EditBusinessForm() {
   // add data on the table from Api
   const submitHandler = (event) => {
     event.preventDefault();
+    console.log(errors);
     if (!Object.keys(errors).length) {
-      console.log(data);
-
-      fetchApi(
-        addProUrl,
-        {
-          coName: data.coName,
-          coPhoneNumber: data.phone,
-          email: data.email,
-          country: data.country,
-          address: data.address,
-          services_products: data.address,
-          category: data.category,
-          yearOfExperience: data.yearOfExperience,
-          coWebsite: data.coWebsite,
-          coAbout: data.coAbout,
-          status: data.status,
-          dateTime: data.dateTime,
-        },
-        "post"
-      ).then((res) => {
+      fetchApi(editBusinessUrl, updateData, "put").then((res) => {
         //(res);
         if (res.status_code === 200) {
           toast.success(" Business added successfully! ");
-          navigate("/busineess");
+          navigate("/business");
         } else if (res.status_code === 401) {
           if (res.description === "unauthorized") {
             navigate("/login", { replace: true });
@@ -96,55 +82,122 @@ export default function EditBusinessForm() {
       });
     } else {
       setFocus({
-        coName: true,
+        name: true,
         email: true,
-        coPhoneNumber: true,
+        phoneNumber: true,
         country: true,
-        coAddress: true,
-        services_products: true,
+        address: true,
+        services: true,
         category: true,
-        yearOfExperience: true,
-        coWebsite: true,
+        yearofExperience: true,
+        companyWebsite: true,
         coAbout: true,
         status: true,
         dateTime: true,
       });
     }
   };
-  const selectChange = (e) => {
-    console.log(e.target.value);
+
+  const getBusiness = () => {
+    dispatch1(handler(true));
+    fetchApi(businessUrl, { collaction: "company", id }, "post").then((res) => {
+      if (res?.status_code === 200) {
+        dispatch1(handler(false));
+        console.log(res?.Data[0]);
+
+        setData(res?.Data[0]);
+        setMediaItems(res?.Data[0]?.portfolioImgs);
+        setPortfolioVideo(res?.Data[0]?.portfolioVideo);
+        setPhone(res?.Data[0]?.phoneNumber);
+        // setnumber(res?.count);
+        // setTotalPages(res?.max_page);
+      } else {
+        dispatch1(handler(false));
+        toast.error("  Something went wrong!");
+      }
+    });
   };
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-  const [mediaItems, setMediaItems] = useState([
-    {
-      type: "image",
-      url: "https://images.unsplash.com/photo-1509721434272-b79147e0e708?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
-      caption: "First Image",
-    },
-    {
-      type: "image",
-      url: "https://images.unsplash.com/photo-1506710507565-203b9f24669b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1536&q=80",
-      caption: "Second Image",
-    },
-    {
-      type: "video",
-      url: "https://www.w3schools.com/html/movie.mp4",
-      caption: "Sample Video",
-    },
-    {
-      type: "image",
-      url: "https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
-      caption: "Third Image",
-    },
-  ]);
+  const countrySelect = (name) => {
+    dispatch1(handler(true));
+    fetchApi(cityUrl, { collaction: "city", query: { country: name }, page: "all" }, "post").then(
+      (res) => {
+        if (res?.status_code === 200) {
+          dispatch1(handler(false));
+          // console.log(res);
+          setCountrySelection(res?.data);
+          // setData(res?.data);
+          // setnumber(res?.count);
+          // setTotalPages(res?.max_page);
+        } else {
+          dispatch1(handler(false));
+          toast.error("  Something went wrong!");
+        }
+      }
+    );
+    // console.log(name);
+  };
+  const getCategory = () => {
+    dispatch1(handler(true));
+    fetchApi(categoryUrl, { collaction: "cat", query: {}, page: "all" }, "post").then((res) => {
+      if (res?.status_code === 200) {
+        dispatch1(handler(false));
+        // console.log(res);
+
+        setCategory(res?.data);
+        // setnumber(res?.count);
+        // setTotalPages(res?.max_page);
+      } else {
+        dispatch1(handler(false));
+        toast.error("Something went wrong!");
+      }
+    });
+  };
+  const categorySelect = (id) => {
+    // console.log(id);
+    dispatch1(handler(true));
+    fetchApi(categoryUrl, { collaction: "subcat", query: { catid: id }, page: "all" }, "post").then(
+      (res) => {
+        if (res?.status_code === 200) {
+          dispatch1(handler(false));
+          // console.log(res?.data);
+
+          setSubCategory(res?.data);
+        } else {
+          dispatch1(handler(false));
+          toast.error("Something went wrong!");
+        }
+      }
+    );
+  };
+
+  const [selectedMedia, setSelectedMedia] = useState();
+
   const handleDeleteMedia = (url) => {
-    const updatedMediaItems = mediaItems.filter((item) => item.url !== url);
+    console.log(url.split(".").pop());
+
+    const updatedMediaItems = mediaItems.filter((item) => item !== url);
     setMediaItems(updatedMediaItems);
+    if (url.split(".").pop() === "mp4") {
+      // console.log("1");
+      setPortfolioVideo("")
+      setUpdateData({
+        id,
+        collaction: "company",
+        portfolioImgs: updatedMediaItems,
+        portfolioVideo: "",
+      });
+    } else {
+      // console.log("2");
+      setUpdateData({
+        id,
+        collaction: "company",
+        portfolioImgs: updatedMediaItems,
+        portfolioVideo,
+      });
+    }
 
     // Reset selected media if the deleted one was selected
-    if (selectedMedia.url === url) {
+    if (selectedMedia === url) {
       setSelectedMedia(updatedMediaItems[0] || null);
     }
   };
@@ -156,19 +209,51 @@ export default function EditBusinessForm() {
     };
     setMediaItems([...mediaItems, newMedia]);
   };
-  const [selectedMedia, setSelectedMedia] = useState(mediaItems[0]);
+
+  const handleOnChange = (value, metadata) => {
+    if (metadata && metadata.country !== country) {
+      const newCountry = metadata.country;
+      const newCallingCode = `+${getCountryCallingCode(newCountry)}`;
+      newCallingCode.setPhone(newCallingCode); 
+      setCountry(newCountry); 
+    }else {
+      setPhone(value); 
+    }
+    setUpdateData({
+      id,
+      collaction: "company",
+      portfolioImgs: mediaItems,
+      ...updateData,
+      phoneNumber: value?.replace(/^\+/, ""),
+    });
+  };
+
+  useEffect(() => {
+    if (mediaItems) {
+      if (!selectedMedia && mediaItems?.length > 0) {
+        setSelectedMedia(mediaItems[0]);
+      }
+    }
+  }, [selectedMedia, mediaItems]);
+  useEffect(() => {
+    console.log(data, "update:", updateData);
+    getCategory();
+    getBusiness();
+  }, []);
+  console.log(updateData);
 
   return (
     <>
       <div className={style.addContainer}>
-        <form className={`${style.contantAddForm} !grid !grid-cols-1 xl:!grid-cols-2 gap-6`}>
+        <form className={`${style.contantAddForm} !grid !grid-cols-1 2xl:!grid-cols-2 gap-6`}>
           <div className=" px-4">
             <div className="grid  sm:grid-cols-2">
               <div className={style.formItem}>
                 <Input
                   color="light"
                   type="text"
-                  name="coName"
+                  name="name"
+                  value={data?.name}
                   onFocus={focusHandler}
                   onChange={changeHandler}
                   classNames={{
@@ -177,14 +262,33 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Company name "
-                  isInvalid={errors.coName && focus.coName}
+                  isInvalid={errors.name && focus.name}
                 />
               </div>
-              <div className={style.formItem}>
+              <div className=" h-full flex flex-col justify-end">
+                <div className={`${style.formItem} h-10 border-2  rounded-lg   `}>
+                  <PhoneInput
+                    international
+                    type="text"
+                    // name="phoneNumber"
+                    defaultCountry="US"
+                    value={data?.phoneNumber}
+                    onChange={(value, metadata) => handleOnChange(value, metadata)}
+                    limitMaxLength
+                    className={`${style1.phoneInput} !outline-none`}
+                    placeholder="Enter phone number"
+                  />
+                  {/* {phone === "" && (
+                <span className={style1.error}>Please enter a valid phone number</span>
+              )} */}
+                </div>
+              </div>
+              {/* <div className={style.formItem}>
                 <Input
                   color="light"
                   type="number"
-                  name="phone"
+                  value={data?.phoneNumber}
+                  name="phoneNumber"
                   onFocus={focusHandler}
                   onChange={changeHandler}
                   classNames={{
@@ -193,11 +297,11 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label="  Company Phone  "
-                  isInvalid={errors.phone && focus.phone}
+                  isInvalid={errors.phoneNumber && focus.phoneNumber}
                 />
-              </div>
+              </div> */}
 
-              <div className={style.formItem}>
+              {/* <div className={style.formItem}>
                 <Input
                   color="light"
                   type="email"
@@ -212,31 +316,60 @@ export default function EditBusinessForm() {
                   labelPlacement="outside"
                   label="Email"
                 />
-              </div>
+              </div> */}
               <div className={style.formItem}>
                 <Select
                   color="light"
                   name="country"
                   // onFocus={focusHandler}
-                  onChange={selectChange}
+                  onChange={changeHandler}
+                  value={data?.country}
                   classNames={{
                     input: ["text-[14px]"],
                   }}
                   variant="bordered"
                   labelPlacement="outside"
                   label="Country"
-                  isInvalid={errors.country && focus.country}
+                  // isInvalid={errors.phone && focus.phone}
                 >
                   {countriesData.map((item) => (
-                    <SelectItem key={item.name}>{item.name}</SelectItem>
+                    <SelectItem
+                      key={item.name}
+                      onClick={() => {
+                        countrySelect(item.name);
+                      }}
+                    >
+                      {item.name}
+                    </SelectItem>
+                  ))}
+                </Select>
+              </div>
+              <div className={style.formItem}>
+                <Select
+                  color="light"
+                  name="city"
+                  value={data?.city}
+                  // onFocus={focusHandler}
+                  onChange={changeHandler}
+                  classNames={{
+                    input: ["text-[14px]"],
+                  }}
+                  variant="bordered"
+                  labelPlacement="outside"
+                  label="City"
+                  // isInvalid={errors.phone && focus.phone}
+                >
+                  {countrySelection?.map((item) => (
+                    <SelectItem key={item?.city}> {item?.city}</SelectItem>
                   ))}
                 </Select>
               </div>
               <div className={style.formItem}>
                 <Input
                   color="light"
-                  type="select"
-                  name="coAddress"
+                  type="text"
+                  name="address"
+                  value={data?.address}
                   onFocus={focusHandler}
                   onChange={changeHandler}
                   classNames={{
@@ -245,7 +378,7 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Company Address "
-                  isInvalid={errors.coAddress && focus.coAddress}
+                  isInvalid={errors.address && focus.address}
                 />
               </div>
 
@@ -253,7 +386,8 @@ export default function EditBusinessForm() {
                 <Input
                   color="light"
                   type="text"
-                  name="services_products"
+                  name="services"
+                  value={data?.services}
                   onFocus={focusHandler}
                   onChange={changeHandler}
                   classNames={{
@@ -262,56 +396,62 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Services & Products "
-                  isInvalid={errors.services_products && focus.services_products}
+                  isInvalid={errors.services && focus.services}
                 />
               </div>
               <div className={style.formItem}>
                 <Select
                   color="light"
                   name="category"
+                  value={data?.category}
                   // onFocus={focusHandler}
-                  // onChange={changeHandler}
+                  onChange={changeHandler}
                   classNames={{
                     input: ["text-[14px]"],
                   }}
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Category "
-                  isInvalid={errors.category && focus.category}
+                  // isInvalid={errors.phone && focus.phone}
                 >
-                  <SelectItem key="programming">Programming</SelectItem>
-                  <SelectItem key="programming">Programming</SelectItem>
-                  <SelectItem key="programming">Programming</SelectItem>
-                  <SelectItem key="programming">Programming</SelectItem>
-                  <SelectItem key="programming">Programming</SelectItem>
-                  <SelectItem key="programming">Programming</SelectItem>
+                  {category?.map((cat) => (
+                    <SelectItem
+                      onClick={() => {
+                        categorySelect(cat._id);
+                      }}
+                      key={cat?.title}
+                    >
+                      {cat?.title}
+                    </SelectItem>
+                  ))}
                 </Select>
               </div>
               <div className={style.formItem}>
                 <Select
                   color="light"
                   name="subcategory"
+                  value={data?.subcategory}
                   // onFocus={focusHandler}
-                  // onChange={changeHandler}
+                  onChange={changeHandler}
                   classNames={{
                     input: ["text-[14px]"],
                   }}
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Subcategory "
-                  isInvalid={errors.subcategory && focus.subcategory}
+                  // isInvalid={errors.phone && focus.phone}
                 >
-                  <SelectItem key="frontend">frontend</SelectItem>
-                  <SelectItem key="backend">backend</SelectItem>
-                  <SelectItem key="ui-ux">ui-ux</SelectItem>
-                  <SelectItem key="devops">devops</SelectItem>
+                  {subCategory?.map((item) => (
+                    <SelectItem key={item?.title}>{item?.title}</SelectItem>
+                  ))}
                 </Select>
               </div>
               <div className={style.formItem}>
                 <Input
                   color="light"
                   type="number"
-                  name="yearOfExperience"
+                  name="yearofExperience"
+                  value={data?.yearofExperience}
                   onFocus={focusHandler}
                   onChange={changeHandler}
                   classNames={{
@@ -320,14 +460,15 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Year Of Experience "
-                  isInvalid={errors.yearOfExperience && focus.yearOfExperience}
+                  isInvalid={errors.yearofExperience && focus.yearofExperience}
                 />
               </div>
               <div className={style.formItem}>
                 <Input
                   color="light"
                   type="text"
-                  name="coWebsite"
+                  name="companyWebsite"
+                  value={data?.companyWebsite}
                   onFocus={focusHandler}
                   onChange={changeHandler}
                   classNames={{
@@ -336,7 +477,7 @@ export default function EditBusinessForm() {
                   variant="bordered"
                   labelPlacement="outside"
                   label=" Company Website "
-                  isInvalid={errors.coWebsite && focus.coWebsite}
+                  isInvalid={errors.companyWebsite && focus.companyWebsite}
                 />
               </div>
             </div>
@@ -344,123 +485,225 @@ export default function EditBusinessForm() {
               <Textarea
                 variant="bordered"
                 label="About Company"
+                value={data?.about}
+                name="about"
+                onChange={changeHandler}
                 labelPlacement="outside"
                 placeholder="Enter your description"
                 className="text-gray-700 "
-                isInvalid={errors.description && focus.description}
+                isInvalid={errors.about && focus.about}
               />
             </div>
           </div>
-          <div className="flex justify-center">
-            <Card className=" xl:w-[500px]" >
-              {/* Main Media Display */}
-              <div
-                className="main-media-display"
-                style={{ textAlign: "center", marginBottom: "20px", position: "relative" }}
-              >
-                {/* Delete Button */}
-                {selectedMedia && (
-                  <button
-                    onClick={() => handleDeleteMedia(selectedMedia.url)} // Delete handler
-                    style={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "10px",
-                      backgroundColor: "red",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "50%",
-                      width: "30px",
-                      height: "30px",
-                      cursor: "pointer",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    X
-                  </button>
-                )}
-                {selectedMedia.type === "image" ? (
-                  <img
-                    src={selectedMedia.url}
-                    alt="Selected"
-                    style={{ width: "100%", maxWidth: "800px", height: "auto" }}
-                  />
-                ) : (
-                  <video style={{ width: "100%", maxWidth: "800px", height: "auto" }} controls>
-                    <source src={selectedMedia.url} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                )}
-              </div>
-
-              {/* Horizontal Slider */}
-              <div
-                className="slide-container"
-                style={{
-                  display: "flex",
-                  overflowX: "scroll",
-                  paddingBottom: "10px",
-                  paddingRight: "5px",
-                }}
-              >
-                {mediaItems.map((item, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      margin: "5px 10px",
-                      cursor: "pointer",
-                      opacity: selectedMedia.url === item.url ? 1 : 0.6, // Highlight selected media
-                      transition: "opacity 0.3s",
-                    }}
-                    onClick={() => setSelectedMedia(item)} // Update selected media
-                  >
-                    {item.type === "image" ? (
-                      <img
-                        style={{
-                          width: "120px",
-                          height: "80px",
-                          objectFit: "cover",
-                          borderRadius: "8px",
-                        }}
-                        src={item.url}
-                        alt={`thumbnail-${index}`}
-                      />
-                    ) : (
-                      <video
-                        style={{
-                          width: "120px",
-                          height: "80px",
-                          objectFit: "cover",
-                          borderRadius: "8px",
-                        }}
-                        muted
-                      >
-                        <source src={item.url} type="video/mp4" />
-                      </video>
-                    )}
-                  </div>
-                ))}
-
-                {/* Add New Media Button */}
-                <div
-                  style={{
-                    width: "120px",
-                    height: "80px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    border: "2px dashed #ccc",
-                    borderRadius: "8px",
-                    cursor: "pointer",
-                    margin: "5px 10px",
-                  }}
-                  onClick={handleAddMedia} // Add new media handler
-                >
-                  <span style={{ fontSize: "24px", color: "#999" }}>+</span>
-                </div>
-              </div>
-            </Card>
-          </div>
+          <div className=" grid md:grid-cols-2 gap-4 ">
+                      {mediaItems && (
+                        <>
+                          <Card
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              position: "relative",
+                              overflowY: "auto",
+                              height: "100%",
+                              maxWidth: "800px",
+                            }}
+                          >
+                            {/* Main Media Display */}
+                            <div
+                              className="main-media-display"
+                              style={{ textAlign: "center", marginBottom: "20px", position: "relative" }}
+                            >
+                              {/* Delete Button */}
+                              {mediaItems.length > 0 ? (
+                                <div>
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleDeleteMedia(selectedMedia);
+                                    }}
+                                    style={{
+                                      position: "absolute",
+                                      top: "10px",
+                                      right: "10px",
+                                      backgroundColor: "red",
+                                      color: "white",
+                                      border: "none",
+                                      borderRadius: "50%",
+                                      width: "30px",
+                                      height: "30px",
+                                      cursor: "pointer",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    X
+                                  </button>
+          
+                                  <img
+                                    className="object-cover rounded"
+                                    style={{ width: "auto", maxHeight: "500px" }}
+                                    src={selectedMedia}
+                                    // alt="Selected"
+                                  />
+                                </div>
+                              ) : (
+                                <div className=" w-[500px] flex justify-center items-center h-[500px] ">
+                                  <IoImageOutline className=" text-9xl" />
+                                </div>
+                              )}
+                              {/* {selectedMedia.type === "image" ? (
+                            <img
+                              src={selectedMedia.url}
+                              alt="Selected"
+                              style={{ width: "100%", maxWidth: "800px", height: "auto" }}
+                            />
+                          ) : (
+                            <video style={{ width: "100%", maxWidth: "800px", height: "auto" }} controls>
+                              <source src={selectedMedia.url} type="video/mp4" />
+                              Your browser does not support the video tag.
+                            </video>
+                          )} */}
+                            </div>
+          
+                            {/* Horizontal Slider */}
+                            <div
+                              className="slide-container"
+                              style={{
+                                display: "flex",
+                                overflowX: "auto",
+                                paddingBottom: "10px",
+                                paddingRight: "5px",
+                              }}
+                            >
+                              {mediaItems?.map((item, index) => (
+                                <div
+                                  key={index}
+                                  style={{
+                                    margin: "5px 10px",
+                                    cursor: "pointer",
+                                    opacity: selectedMedia === item ? 1 : 0.6, // Highlight selected media
+                                    transition: "opacity 0.3s",
+                                  }}
+                                  onClick={() => setSelectedMedia(item)} // Update selected media
+                                >
+                                  <img
+                                    style={{
+                                      width: "120px",
+                                      height: "80px",
+                                      objectFit: "cover",
+                                      borderRadius: "8px",
+                                    }}
+                                    src={item}
+                                    alt={`thumbnail-${index}`}
+                                  />
+                                  {/* <video
+                                  style={{
+                                    width: "120px",
+                                    height: "80px",
+                                    objectFit: "cover",
+                                    borderRadius: "8px",
+                                  }}
+                                  muted
+                                >
+                                  <source src={item} type="video/mp4" />
+                                </video> */}
+                                  {/* {item.type === "image" ? (
+                                <img
+                                  style={{
+                                    width: "120px",
+                                    height: "80px",
+                                    objectFit: "cover",
+                                    borderRadius: "8px",
+                                  }}
+                                  src={item}
+                                  alt={`thumbnail-${index}`}
+                                />
+                              ) : (
+                                <video
+                                  style={{
+                                    width: "120px",
+                                    height: "80px",
+                                    objectFit: "cover",
+                                    borderRadius: "8px",
+                                  }}
+                                  muted
+                                >
+                                  <source src={item.url} type="video/mp4" />
+                                </video>
+                              )} */}
+                                </div>
+                              ))}
+          
+                              {/* Add New Media Button */}
+                              {/* <div
+                            style={{
+                              width: "120px",
+                              height: "80px",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              border: "2px dashed #ccc",
+                              borderRadius: "8px",
+                              cursor: "pointer",
+                              margin: "5px 10px",
+                            }}
+                            onClick={handleAddMedia} // Add new media handler
+                          >
+                            <span style={{ fontSize: "24px", color: "#999" }}>+</span>
+                          </div> */}
+                            </div>
+                          </Card>
+                          <Card
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              position: "relative",
+                              overflowY: "auto",
+                              height: "100%",
+                              maxWidth: "800px",
+                            }}
+                          >
+                           
+                            {portfolioVideo ? (
+                              <div>
+                                 <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleDeleteMedia(portfolioVideo);
+                              }}
+                              style={{
+                                position: "absolute",
+                                top: "10px",
+                                right: "10px",
+                                backgroundColor: "red",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "50%",
+                                width: "30px",
+                                height: "30px",
+                                cursor: "pointer",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              X
+                            </button>
+                                <video style={{ width: "100%", maxWidth: "800px", height: "auto" }} controls>
+                                  <source src={portfolioVideo} type="video/mp4" />
+                                  Your browser does not support the video tag.
+                                </video>
+                              </div>
+                            ) : (
+                              <div className="flex justify-center items-center h-[500px]">
+                                <IoImageOutline className=" text-9xl" />
+                              </div>
+                            )}
+                          </Card>
+                        </>
+                      )}
+                    </div>
           <div className="w-full">
             <div className="w-full flex justify-center  gap-4 mb-6">
               <Button
@@ -480,7 +723,6 @@ export default function EditBusinessForm() {
               </Button>
             </div>
           </div>
-
         </form>
       </div>
     </>

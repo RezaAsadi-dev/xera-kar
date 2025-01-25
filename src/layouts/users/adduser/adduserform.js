@@ -2,20 +2,17 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import style from "./style.module.scss";
-import { FaCheck } from "react-icons/fa";
-import { AiFillStop } from "react-icons/ai";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
 import { green } from "@mui/material/colors";
 import validate from "./validate";
-// import Select from "examples/selectSearch";
 import { fetchApi } from "api";
 import { Button, Input } from "@nextui-org/react";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
 export default function AddUserForm() {
-  const addProUrl = "v1/api/admin/agent/add";
+  const addProUrl = "api/admin/add";
   const navigate = useNavigate();
   const [focus, setFocus] = useState({});
   const [errors, setErrors] = useState({});
@@ -30,26 +27,7 @@ export default function AddUserForm() {
     dateTime: "",
     status: "",
   });
-  const [showPass,setShowPass]=useState({
-    pass:false,
-    confirm:false
-  });
-  const ButtonStyle = styled(Button)(({ theme }) => ({
-    color: theme.palette.getContrastText(red[800]),
-    backgroundColor: red[800],
-    width: 150,
-    "&:hover": {
-      backgroundColor: red[700],
-    },
-  }));
-  const ButtonStyle2 = styled(Button)(({ theme }) => ({
-    color: theme.palette.getContrastText(green[800]),
-    width: 150,
-    backgroundColor: green[800],
-    "&:hover": {
-      backgroundColor: green[700],
-    },
-  }));
+  
   const deleteHandler = () => {
     navigate("/users", { replace: true });
   };
