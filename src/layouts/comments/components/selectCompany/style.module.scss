@@ -1,0 +1,57 @@
+.testtt {
+  width: 100% !important;
+  margin-top: 15px;
+}
+
+.dropDownMenu {
+  background-color: rgb(247, 247, 249);
+  padding: 3px;
+  position: absolute;
+  top: 86px;
+  z-index: 1000;
+
+  nav {
+    display: flex;
+    justify-content: center;
+    margin: 1px !important;
+
+    ul {
+      cursor: pointer;
+    }
+  }
+}
+
+.errorMessage {
+  margin: 10px;
+  font-size: 9px;
+  color: rgb(218, 90, 130);
+}
+
+.searchContainer {
+  /* display: flex; */
+  position: relative;
+  /* display: inline-block; */
+  width: 100%;
+  margin: 5px auto;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.searchInput {
+  padding-left: 30px;
+  width: 100%;
+  /* Adjust based on icon size and positioning */
+  padding-right: 10px;
+  font-size: 12px;
+  /* Adjust font size as needed */
+  border: 1px solid #ffffff !important;
+  border-radius: 4px;
+  height: 38px !important;
+  color: rgb(118, 140, 213);
+}

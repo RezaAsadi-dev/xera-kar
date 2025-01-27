@@ -296,7 +296,7 @@ const ChatPage = ({ chatData, setSelected, refetch }) => {
 
   const upload = async (data) => {
     setUploading(true);
-    const url = await fetchApi("image/uploader", data, "post-imgUpload").then((res) => {
+    const url = await fetchApi("api/image/uploader", data, "post-imgUpload").then((res) => {
       if (res?.status_code === 200) {
         console.log(res);
          

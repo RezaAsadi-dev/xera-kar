@@ -455,6 +455,7 @@ export default function Professionals() {
                         <td className={`${style.userDetail} flex flex-col items-start gap-2`}>
                           <Options
                             data={item}
+                          
                             status={item.status}
                             id={item._id}
                             openModal={setDeleteModal}
@@ -463,6 +464,7 @@ export default function Professionals() {
                               setUserStatus(item.status ? deactive : active);
                             }}
                             userId={item._id}
+                            refetch={fetchUsers}
                             phoneNumber={item.phoneNumber}
                             fName={item.name}
                             lName={item.lName}

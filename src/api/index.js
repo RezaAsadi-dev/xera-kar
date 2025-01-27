@@ -2,8 +2,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 // export const mainAddress = "http://DESKTOP-D852917:5000";
+export const mainAddress = `http://192.168.100.135:5000`;;
 // export const mainAddress = "https://sinaback.liara.run";
-export const mainAddress = `http://pl4ten:5000`;
+// export const mainAddress = `http://pl4ten:5000`;
 
 const pathName = window.location.pathname;
 

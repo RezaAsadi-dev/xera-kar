@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 
 const FileUploader = ({ onChange,data,setData }) => {
   const [previewImage, setPreviewImage] = useState(null);
-  const url = "image/uploader";
+  const url = "api/image/uploader";
 
   const handleFileChange = async (e) => {
     const file = await e.target.files[0];

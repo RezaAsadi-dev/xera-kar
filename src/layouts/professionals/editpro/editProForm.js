@@ -45,8 +45,8 @@ export default function EditProForm() {
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
-    // console.log(name);
-    // console.log(value);
+    console.log(name);
+    console.log(value);
 
     setData({
       ...data,
@@ -228,7 +228,6 @@ export default function EditProForm() {
       }
     );
   };
-  console.log(mediaItems);
 
   useEffect(() => {
     if (mediaItems) {

@@ -12,6 +12,8 @@ import toast from "react-hot-toast";
 import { VscCompassActive } from "react-icons/vsc";
 import { FiInfo } from "react-icons/fi";
 import { fetchApi } from "api";
+import { useDispatch } from "react-redux";
+import {handler} from "../../../redux/loaderSlice"
 const StyledMenu = styled((props) => (
   <Menu
     elevation={0}
@@ -51,8 +53,9 @@ const StyledMenu = styled((props) => (
 
 export default function Options({ openModal, refetch, id: userId, status }) {
   const navigate = useNavigate();
+  const dispatch1=useDispatch()
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const deleteUrl = "api/admin/delet"
+  const updateUrl = "api/admin/update"
   const open = Boolean(anchorEl);
   const handleClick = (event, type, id) => {
     setAnchorEl(event.currentTarget);
@@ -63,6 +66,7 @@ export default function Options({ openModal, refetch, id: userId, status }) {
       if (result) {
         openModal(true);
         setAnchorEl(null);
+        submit()
       }
     } else if (type === "detail") {
       navigate(`/professionals/professionaldetails/${id}`);
@@ -83,7 +87,7 @@ export default function Options({ openModal, refetch, id: userId, status }) {
     } else return true;
   };
   const submit = () => {
-    fetchApi(deleteUrl, { id: userId, status: !status}, "put").then((res) => {
+    fetchApi(updateUrl, {collaction: "company", id: userId, status: !status}, "put").then((res) => {
       if (res?.status_code === 200) {
         if (status) {
           toast.success(" Professional deactivated successfully! ");

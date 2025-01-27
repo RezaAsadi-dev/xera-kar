@@ -80,7 +80,7 @@ export default function Business() {
   };
 
   const queryHandler = () => {
-    const total = {};
+    const total = {type:"business"};
     if (filters.name) total["name"] = { $regex: filters.name };
     if (filters.phoneNumber) total["phoneNumber"] = { $regex: filters.phoneNumber };
     if (filters.country) total["country"] = { $regex: filters.country };

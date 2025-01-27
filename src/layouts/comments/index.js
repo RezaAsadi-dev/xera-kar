@@ -25,6 +25,7 @@ import { useDisclosure } from "@nextui-org/react";
 import accessPage from "helper/functios";
 import Lotties from "layouts/noData/Lotties";
 import LengthNumber from "components/lengthNumber";
+import SelectCompany from "./components/selectCompany/selectCompany";
 
 function Comments() {
   const dispatch1 = useDispatch();
@@ -38,9 +39,15 @@ function Comments() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [statusData, setStatusData] = useState([]);
   const [status, setStatus] = useState();
+  const [toggleCompanySelect, setToggleCompanySelect] = useState(false);
+  const [toggleUserSelect, setToggleUserSelect] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [modalData, setModalData] = useState();
   const [haveFilter, setHaveFilter] = useState(false);
+  const [chosenUser, setChosenUser] = useState({
+    company: "",
+    user: "",
+  });
   const [enDatetime, setEnDatetime] = useState({
     start: "",
     end: "",
@@ -54,6 +61,7 @@ function Comments() {
     userid: "",
     status: "",
   });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFilters((prevFilters) => ({
@@ -129,6 +137,10 @@ function Comments() {
   };
 
   const handleReset = () => {
+    setChosenUser({
+      company: "",
+      user: "",
+    });
     setFilters({
       companyid: "",
       userid: "",
@@ -154,7 +166,7 @@ function Comments() {
       fetchApi(
         commentsUrl,
         {
-         collaction: "comment",
+          collaction: "comment",
           page: currentPage,
           query: queryHandler(),
         },
@@ -238,7 +250,6 @@ function Comments() {
   const queryHandler = () => {
     const total = {};
     if (filters.companyid) total["companyid"] = { $regex: filters.companyid };
-    console.log(filters.companyid);
     if (filters.userid) total["userid"] = { $regex: filters.userid };
     if (filters.status) total["status"] = filters.status === "active" ? true : false;
     if (filters.dateTime) total["dateTime"] = { $regex: filters.dateTime };
@@ -279,6 +290,8 @@ function Comments() {
     );
   };
 
+
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -292,25 +305,56 @@ function Comments() {
           >
             <div className={styles.filterContainer}>
               {inputFields?.map((field) => (
-                <div className={`${styles.filterFiled}  `} key={field.name}>
+                <div className={`${styles.filterFiled}  relative `} key={field.name}>
                   <label htmlFor={field.name}> {field.label} : </label>
-                  {field.type === "text" && (
-                    <input
-                      name={field.name}
-                      type="text"
-                      value={filters[field.name]}
-                      onChange={handleChange}
-                    />
+                  {field.name === "companyid" && (
+                    <>
+                      <input
+                        name={field.name}
+                        type="text"
+                        onClick={(e) => {
+                          setToggleCompanySelect(!toggleCompanySelect);
+                        }}
+                        value={chosenUser.company}
+                        // onChange={handleChange}
+                      />
+
+                      {toggleCompanySelect && (
+                        <SelectCompany
+                          chosenUser={chosenUser}
+                          setChosenUser={setChosenUser}
+                          setToggleCompanySelect={setToggleCompanySelect}
+                          toggleCompanySelect={toggleCompanySelect}
+                          setFilters={setFilters}
+                          filters={filters}
+                          name={"company"}
+                        ></SelectCompany>
+                      )}
+                    </>
                   )}
-                  {field.type === "number" && (
-                    <input
-                      name={field.name}
-                      type={field.type}
-                      value={filters[field.name]}
-                      min="0"
-                      max="99999999999"
-                      onChange={handleChangeNumber}
-                    />
+                  {field.name === "userid" && (
+                    <>
+                      <input
+                        name={field.name}
+                        type={field.type}
+                        value={chosenUser.user}
+                        onClick={(e) => {
+                          setToggleUserSelect(!toggleUserSelect);
+                        }}
+                        // onChange={handleChangeNumber}
+                      />
+                      {toggleUserSelect && (
+                        <SelectCompany
+                          chosenUser={chosenUser}
+                          setChosenUser={setChosenUser}
+                          setToggleUserSelect={setToggleUserSelect}
+                          toggleUserSelect={toggleUserSelect}
+                          setFilters={setFilters}
+                          filters={filters}
+                          name={"user"}
+                        ></SelectCompany>
+                      )}
+                    </>
                   )}
                   {field.type === "select" && (
                     <select name={field.name} value={filters[field.name]} onChange={handleChange}>

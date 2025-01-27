@@ -189,7 +189,7 @@ function Dashboard() {
               <MiniStatisticsCard
                 className="dashboardIcon"
                 title={{ text: " # requests " }}
-                count={Number(dashboardData.ticketCount).toLocaleString()}
+                count={Number(dashboardData.requestCount).toLocaleString()}
                 percentage={{ color: "success", text: "request" }}
                 icon={{ color: "info", component: "request_page" }}
                 style={{ minHeight: "120px" }}
@@ -227,7 +227,7 @@ function Dashboard() {
               <MiniStatisticsCard
                 className="dashboardIcon"
                 title={{ text: " # slider " }}
-                count={Number(dashboardData.ticketCount).toLocaleString()}
+                count={Number(dashboardData.sliderCount).toLocaleString()}
                 percentage={{ color: "success", text: "sliders" }}
                 icon={{ color: "info", component: "tune_icon" }}
                 style={{ minHeight: "120px" }}
@@ -246,7 +246,7 @@ function Dashboard() {
               <MiniStatisticsCard
                 className="dashboardIcon"
                 title={{ text: " # advisment " }}
-                count={Number(dashboardData.ticketCount).toLocaleString()}
+                count={Number(dashboardData.advismentCount).toLocaleString()}
                 percentage={{ color: "success", text: "advisements" }}
                 icon={{ color: "info", component: "queue_icon" }}
                 style={{ minHeight: "120px" }}
@@ -265,7 +265,7 @@ function Dashboard() {
               <MiniStatisticsCard
                 className="dashboardIcon"
                 title={{ text: " # notfications " }}
-                count={Number(dashboardData.ticketCount).toLocaleString()}
+                count={Number(dashboardData.notificationCount).toLocaleString()}
                 percentage={{ color: "success", text: "Notifs" }}
                 icon={{ color: "info", component: " circle_notifications_icon" }}
                 style={{ minHeight: "120px" }}
